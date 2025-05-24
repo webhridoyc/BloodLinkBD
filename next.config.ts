@@ -5,10 +5,10 @@ const nextConfig: NextConfig = {
   output: 'export', // Enable static export
   /* config options here */
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false, // Changed to false
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false, // Changed to false
   },
   images: {
     unoptimized: true, // Required for static export with next/image
