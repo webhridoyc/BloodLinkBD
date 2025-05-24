@@ -23,6 +23,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function MyRequestsPage() {
   const { user, loading: authLoading } = useProtectedRoute();

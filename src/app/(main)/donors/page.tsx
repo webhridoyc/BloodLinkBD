@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Users, Search, RotateCcw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function ViewDonorsPage() {
   const [donors, setDonors] = useState<Donor[]>([]);

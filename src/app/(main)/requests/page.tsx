@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ListChecks, Search, RotateCcw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function ViewRequestsPage() {
   const [requests, setRequests] = useState<BloodRequest[]>([]);
