@@ -1,8 +1,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Phone, MapPin, MessageSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; // Keep for potential other uses, or remove if truly unused after change
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function ContactPage() {
   return (
@@ -58,15 +60,24 @@ export default function ContactPage() {
           <div className="pt-6 border-t">
             <h3 className="font-semibold text-lg mb-3">Quick Links</h3>
             <div className="space-x-3">
-                <Button variant="outline" asChild>
-                    <Link href="/requests">View Requests</Link>
-                </Button>
-                <Button variant="outline" asChild>
-                    <Link href="/donors">Find Donors</Link>
-                </Button>
-                 <Button variant="outline" asChild>
-                    <Link href="/faq">FAQ</Link> {/* Placeholder for FAQ page */}
-                </Button>
+                <Link 
+                  href="/requests" 
+                  className={cn(buttonVariants({ variant: "outline" }))}
+                >
+                  View Requests
+                </Link>
+                <Link 
+                  href="/donors" 
+                  className={cn(buttonVariants({ variant: "outline" }))}
+                >
+                  Find Donors
+                </Link>
+                 <Link 
+                   href="/faq"  /* Placeholder for FAQ page */
+                   className={cn(buttonVariants({ variant: "outline" }))}
+                 >
+                   FAQ
+                 </Link>
             </div>
           </div>
         </CardContent>
