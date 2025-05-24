@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Droplet, Users, Search, HeartHandshake } from 'lucide-react';
+import { Droplet, Users, Search, HeartHandshake, UserPlus, PlusCircle } from 'lucide-react'; // Added UserPlus, PlusCircle
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -11,10 +11,10 @@ export default function HomePage() {
       <section className="text-center py-12 md:py-20 bg-gradient-to-br from-primary/20 via-background to-accent/20 rounded-lg shadow-lg">
         <div className="container mx-auto px-4">
           <HeartHandshake className="mx-auto h-16 w-16 text-primary mb-6" />
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-primary-foreground_on_primary_variant">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-primary"> {/* Corrected class */}
             Welcome to BloodLink BD
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground_on_primary_variant max-w-2xl mx-auto mb-8">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"> {/* Corrected class */}
             Your vital connection for blood donation in Bangladesh. Find donors, request blood, and save lives with ease.
           </p>
           <div className="space-x-4">
