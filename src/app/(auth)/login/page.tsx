@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -26,7 +26,7 @@ type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user } = useAuth(); // To redirect if already logged in
+  const { user } = useAuth(); 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/profile'); // Or dashboard, or previous page
+      router.push('/profile'); 
     }
   }, [user, router]);
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      router.push('/'); // Redirect to home or dashboard after login
+      router.push('/'); 
     } catch (err: any) {
       setError(err.message || "Failed to login. Please check your credentials.");
     } finally {
@@ -53,7 +53,7 @@ export default function LoginPage() {
     }
   };
 
-  if (user) return null; // Don't render form if user is already logged in and redirecting
+  if (user) return null; 
 
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-10rem)] py-12">
@@ -105,7 +105,7 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center space-y-2">
-          <Link href="/forgot-password"> {/* Add forgot password page if needed */}
+          <Link href="/forgot-password"> 
             <Button variant="link" className="text-sm p-0 h-auto">Forgot password?</Button>
           </Link>
           <p className="text-sm text-muted-foreground">
@@ -119,20 +119,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-// Effect to handle redirect, separate from component logic
-import { useEffect } from 'react';
-function LoginPageEffect() {
-  const { user } = useAuth();
-  const router = useRouter();
-  useEffect(() => {
-    if (user) {
-      router.push('/profile');
-    }
-  }, [user, router]);
-  return null;
-}
-
-// If using this pattern for redirect, ensure LoginPage itself handles the rendering logic
-// For static export, it's better to handle conditional rendering within the component itself.
-// The above `useEffect` in `LoginPage` already handles this.
