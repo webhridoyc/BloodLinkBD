@@ -8,14 +8,31 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { db } from '@/lib/firebase';
 import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import type { Donor, BloodRequest, MatchedPair } from '@/types';
-import { matchDonorsAndRequesters, type MatchDonorsAndRequestersInput } from '@/ai/flows/match-donors-and-requesters';
+// Import the functions library and getFunctions
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useToast } from '@/hooks/use-toast';
 import { Search, Zap, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Helper to convert Firestore Timestamp to string for AI flow if necessary, or ensure AI flow handles it.
-// The AI flow schema expects strings for dates if not specifically handled.
-// For this example, we'll pass core string fields. Location and Blood Group are key.
+// Define the input type locally for the AI matcher payload
+interface AiMatcherServiceInput {
+  donors: Array<{
+    id: string;
+    bloodGroup: Donor['bloodGroup'];
+    location: string;
+    contactNumber: string;
+    fcmToken?: string;
+  }>;
+  requests: Array<{
+    id: string;
+    bloodGroup: BloodRequest['bloodGroup'];
+    location: string;
+    urgency: BloodRequest['urgency'];
+    contactInformation: string;
+    additionalNotes?: string;
+  }>;
+}
+
 
 export default function AiMatcherPage() {
   useProtectedRoute(); // Ensures user is logged in
@@ -52,6 +69,10 @@ export default function AiMatcherPage() {
   }, [toast]);
 
   const handleRunMatcher = async () => {
+    const functions = getFunctions();
+    // Ensure 'matchDonorsAndRequesters' matches your deployed Cloud Function name
+    const matchDonorsAndRequestersCallable = httpsCallable(functions, 'matchDonorsAndRequesters');
+    
     if (donors.length === 0 || requests.length === 0) {
       toast({ title: "Not enough data", description: "Need active donors and requests to run the matcher.", variant: "default" });
       return;
@@ -59,12 +80,12 @@ export default function AiMatcherPage() {
     setIsLoading(true);
     setMatches([]);
     try {
-      const aiInput: MatchDonorsAndRequestersInput = {
+      const aiInput: AiMatcherServiceInput = {
         donors: donors.map(d => ({
           id: d.id!,
           bloodGroup: d.bloodGroup,
           location: d.location,
-          contactNumber: d.contactNumber, // AI Flow has contactNumber
+          contactNumber: d.contactNumber,
           fcmToken: d.fcmToken || undefined
         })),
         requests: requests.map(r => ({
@@ -72,23 +93,23 @@ export default function AiMatcherPage() {
           bloodGroup: r.bloodGroup,
           location: r.location,
           urgency: r.urgency,
-          contactInformation: r.contactInformation, // AI flow has contactInformation
+          contactInformation: r.contactInformation,
           additionalNotes: r.additionalNotes || undefined,
         })),
       };
       
-      const result = await matchDonorsAndRequesters(aiInput);
+      const result = await matchDonorsAndRequestersCallable(aiInput) as { data: MatchedPair[] };
       
-      // Enrich matches with full donor/request objects for easier display
-      const enrichedMatches = result.map(match => {
+      const enrichedMatches = result.data.map(match => {
         const donor = donors.find(d => d.id === match.donorId);
         const request = requests.find(r => r.id === match.requestId);
         return { ...match, donor, request };
       });
 
       setMatches(enrichedMatches);
-      if (result.length > 0) {
-        toast({ title: "Matching Complete!", description: `${result.length} potential match(es) found.` });
+
+      if (enrichedMatches.length > 0) {
+        toast({ title: "Matching Complete!", description: `${enrichedMatches.length} potential match(es) found.` });
       } else {
         toast({ title: "No Matches Found", description: "The AI could not find any suitable matches with the current data." });
       }

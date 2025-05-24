@@ -17,21 +17,21 @@
         "source": "/_next/static/**",
         "headers": [{
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public,max-age=31536000,immutable"
         }]
       },
       {
         "source": "/static/**",
         "headers": [{
           "key": "Cache-Control",
-          "value": "public, max-age=86400"
+          "value": "public,max-age=86400"
         }]
       },
       {
         "source": "/(.*\\.(jpg|jpeg|gif|png|svg|webp|ico|woff|woff2|ttf|eot|otf|mp4|webm))$",
         "headers": [{
           "key": "Cache-Control",
-          "value": "public, max-age=86400"
+          "value": "public,max-age=86400"
         }]
       }
     ],
