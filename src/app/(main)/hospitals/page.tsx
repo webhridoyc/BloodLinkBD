@@ -33,8 +33,8 @@ export default function HospitalsPage() {
               <Image
                 src={hospital.imageUrl}
                 alt={hospital.name}
-                layout="fill"
-                objectFit="cover"
+                fill
+                style={{ objectFit: 'cover' }}
                 data-ai-hint={hospital.dataAiHint}
               />
             </div>

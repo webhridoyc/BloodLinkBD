@@ -128,6 +128,7 @@ export default function Home() {
             width={800} 
             height={400} 
             className="rounded-lg mx-auto shadow-xl"
+            style={{ objectFit: 'cover' }} // Added for consistency, though width/height might make it less critical
             data-ai-hint="blood donation awareness"
           />
       </section>
