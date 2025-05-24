@@ -34,8 +34,13 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
   const form = useForm<BloodRequestFormInputs>({
     resolver: zodResolver(requestSchema),
     defaultValues: {
-      urgency: 'Moderate',
-      ...defaultValues,
+      requesterName: defaultValues?.requesterName ?? "",
+      patientName: defaultValues?.patientName ?? "",
+      bloodGroup: defaultValues?.bloodGroup, // For Select, undefined is fine initially
+      location: defaultValues?.location ?? "",
+      urgency: defaultValues?.urgency ?? 'Moderate',
+      contactInformation: defaultValues?.contactInformation ?? "",
+      additionalNotes: defaultValues?.additionalNotes ?? "",
     },
   });
 

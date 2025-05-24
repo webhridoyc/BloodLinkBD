@@ -29,7 +29,12 @@ interface DonorRegistrationFormProps {
 export function DonorRegistrationForm({ onSubmit, defaultValues, isLoading }: DonorRegistrationFormProps) {
   const form = useForm<DonorFormInputs>({
     resolver: zodResolver(donorSchema),
-    defaultValues,
+    defaultValues: {
+      fullName: defaultValues?.fullName ?? "",
+      bloodGroup: defaultValues?.bloodGroup, // For Select, undefined is fine initially
+      location: defaultValues?.location ?? "",
+      contactNumber: defaultValues?.contactNumber ?? "",
+    },
   });
 
   const handleFormSubmit: SubmitHandler<DonorFormInputs> = async (data) => {
