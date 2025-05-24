@@ -3,46 +3,50 @@ import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getMessaging, Messaging } from "firebase/messaging";
+import { getAnalytics, Analytics } from "firebase/analytics"; // Added Analytics
 
-// Your web app's Firebase configuration - REPLACE WITH YOUR ACTUAL CONFIG
-// It's recommended to use environment variables for this, especially for non-static parts.
-// For a fully static export, this config needs to be available at build time.
+// User-provided Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "YOUR_API_KEY",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "YOUR_AUTH_DOMAIN",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "YOUR_PROJECT_ID",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "YOUR_STORAGE_BUCKET",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "YOUR_MESSAGING_SENDER_ID",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "YOUR_APP_ID",
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "YOUR_MEASUREMENT_ID"
+  apiKey: "AIzaSyCka25-yNdJUDCpdi7D-dDyFVDiBdaIY4Q",
+  authDomain: "bloodshare-bd.firebaseapp.com",
+  projectId: "bloodshare-bd",
+  storageBucket: "bloodshare-bd.firebasestorage.app", // Corrected based on user input
+  messagingSenderId: "947897978001",
+  appId: "1:947897978001:web:c758936d1c709cb0ff0330",
+  measurementId: "G-8L31M1VK1V"
 };
 
 let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
 let messaging: Messaging | undefined;
+let analytics: Analytics | undefined;
 
-if (typeof window !== "undefined" && !getApps().length) {
-  app = initializeApp(firebaseConfig);
+// Initialize Firebase on the client side
+if (typeof window !== "undefined") {
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApps()[0];
+  }
+
   auth = getAuth(app);
   db = getFirestore(app);
-  // Initialize Firebase Messaging if supported
+
   try {
     messaging = getMessaging(app);
   } catch (error) {
     console.warn("Firebase Messaging is not supported in this environment.", error);
     messaging = undefined;
   }
-} else if (getApps().length > 0) {
-  app = getApps()[0];
-  auth = getAuth(app);
-  db = getFirestore(app);
-   try {
-    messaging = getMessaging(app);
+
+  try {
+    analytics = getAnalytics(app);
   } catch (error) {
-    messaging = undefined;
+    console.warn("Firebase Analytics is not supported in this environment.", error);
+    analytics = undefined;
   }
 }
 
-// @ts-ignore
-export { app, auth, db, messaging };
+// @ts-ignore - These might be uninitialized on the server, which is expected for client SDKs.
+export { app, auth, db, messaging, analytics };
