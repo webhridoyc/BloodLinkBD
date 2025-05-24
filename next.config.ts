@@ -1,6 +1,8 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
+  output: 'export', // Enable static export
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
@@ -9,6 +11,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    unoptimized: true, // Required for static export with next/image
     remotePatterns: [
       {
         protocol: 'https',
@@ -18,6 +21,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Ensure experimental.typedRoutes is false or not set, as it can conflict with `output: 'export'`
+  // experimental: {
+  //   typedRoutes: false, 
+  // },
 };
 
 export default nextConfig;
