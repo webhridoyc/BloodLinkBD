@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: false, // Keep this if you prefer no trailing slashes
   images: {
-    unoptimized: true, // This is the crucial line
+    unoptimized: true, // This is the crucial line to disable image optimization for static export
     remotePatterns: [
       {
         protocol: 'https',
@@ -15,7 +15,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Ensuring build errors are not ignored (default behavior is false, but explicit for clarity)
+  // It's good practice not to ignore build errors.
+  // These are often the default, but being explicit can be helpful.
   typescript: {
     ignoreBuildErrors: false,
   },
