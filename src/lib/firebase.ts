@@ -9,12 +9,12 @@ import { getAnalytics, type Analytics } from "firebase/analytics";
 // IMPORTANT: Replace with your actual Firebase project configuration values.
 // The projectId below MUST match the one in your .firebaserc file.
 const firebaseConfig = {
-  apiKey: "YOUR_ACTUAL_API_KEY", // Replace with your real API Key
+  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M", // Replace with your real API Key
   authDomain: "bloodlink-bd.firebaseapp.com", // Ensure 'bloodlink-bd' is your correct projectId
   projectId: "bloodlink-bd", // Ensure this is your correct projectId
   storageBucket: "bloodlink-bd.appspot.com", // Ensure 'bloodlink-bd' is your correct projectId
-  messagingSenderId: "YOUR_ACTUAL_MESSAGING_SENDER_ID", // Replace with your real Messaging Sender ID
-  appId: "YOUR_ACTUAL_APP_ID", // Replace with your real App ID
+  messagingSenderId: "290377663920", // Replace with your real Messaging Sender ID
+  appId: "1:290377663920:web:e84b28e4a922ada8c04275", // Replace with your real App ID
   // measurementId is optional
 };
 
