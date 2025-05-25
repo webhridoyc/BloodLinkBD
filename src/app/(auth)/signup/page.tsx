@@ -55,7 +55,7 @@ export default function SignupPage() {
       const newUserProfile: UserProfile = {
         uid: userCredential.user.uid,
         email: userCredential.user.email ?? undefined, // Coerce null to undefined
-        displayName: data.displayName, // This comes from the form, should be a string
+        displayName: data.displayName, // This comes from the form, is a string
         role: 'user', // Default role
       };
       await setDoc(userDocRef, newUserProfile);

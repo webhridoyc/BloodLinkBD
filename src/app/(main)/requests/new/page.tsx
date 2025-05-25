@@ -26,7 +26,8 @@ export default function NewRequestPage() {
     }
     setIsSubmitting(true);
     try {
-      const newRequest: Omit<BloodRequest, 'id' | 'createdAt'> & { createdAt: any } = { // serverTimestamp() type issue
+      // data.bloodGroup and data.urgency are already correctly typed from BloodRequestFormInputs
+      const newRequestData: Omit<BloodRequest, 'id' | 'createdAt'> & { createdAt: any } = { 
         userId: user.uid,
         requesterName: data.requesterName,
         patientName: data.patientName,
@@ -39,7 +40,7 @@ export default function NewRequestPage() {
         createdAt: serverTimestamp(),
       };
       
-      await addDoc(collection(db, "requests"), newRequest);
+      await addDoc(collection(db, "requests"), newRequestData);
       
       toast({ title: "Success!", description: "Your blood request has been posted." });
       router.push('/requests'); // Redirect to requests list

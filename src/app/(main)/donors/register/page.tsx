@@ -10,7 +10,7 @@ import { db, messaging } from '@/lib/firebase'; // Assuming messaging is exporte
 import { collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus } from 'lucide-react';
-import type { Donor } from '@/types';
+import type { Donor, BloodGroup } from '@/types'; // Ensure BloodGroup is imported
 import { getToken, onMessage } from "firebase/messaging";
 
 // Ensure VAPID key is set up in your Firebase project for web push notifications
@@ -77,33 +77,35 @@ export default function RegisterDonorPage() {
     }
     setIsSubmitting(true);
     
-    const fcmToken = await requestNotificationPermissionAndGetToken(); // fcmToken can be string | null
-    const validBloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const;
-
-    if (!validBloodGroups.includes(data.bloodGroup as any)) {
-      throw new Error('Invalid blood group');
-    }
+    const fcmToken = await requestNotificationPermissionAndGetToken();
 
     try {
       if (existingDonor && existingDonor.id) {
         // Update existing donor document
         const donorDocRef = doc(db, "donors", existingDonor.id);
-        await updateDoc(donorDocRef, {
-          ...data,
+        const donorUpdateData = {
+          fullName: data.fullName,
+          bloodGroup: data.bloodGroup, // data.bloodGroup is BloodGroup from DonorFormInputs
+          location: data.location,
+          contactNumber: data.contactNumber,
           // Use new fcmToken if available, otherwise keep existing, otherwise undefined
           fcmToken: fcmToken || existingDonor.fcmToken || undefined, 
-        });
+        };
+        await updateDoc(donorDocRef, donorUpdateData);
         toast({ title: "Success!", description: "Your donor profile has been updated." });
       } else {
         // Add new donor document
-        const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
-          ...data,
-          bloodGroup: data.bloodGroup as BloodGroup,
+        const newDonorData: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
+          fullName: data.fullName,
+          bloodGroup: data.bloodGroup, // data.bloodGroup is BloodGroup from DonorFormInputs
+          location: data.location,
+          contactNumber: data.contactNumber,
+          userId: user.uid,
           fcmToken: fcmToken || undefined, // Ensures undefined if fcmToken is null
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
-        await addDoc(collection(db, "donors"), newDonor);
+        await addDoc(collection(db, "donors"), newDonorData);
         toast({ title: "Success!", description: "You have been registered as a donor." });
       }
       router.push('/donors'); // Redirect to donors list

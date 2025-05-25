@@ -3,8 +3,8 @@ import type { Timestamp } from "firebase/firestore";
 
 export interface UserProfile {
   uid: string;
-  email?: string; // Changed from string | null to string | undefined
-  displayName?: string; // Changed from string | null (optional means string | undefined)
+  email?: string; // Changed from string | null
+  displayName?: string; // Changed from string | null
   role?: 'user' | 'admin';
   // Add other profile fields if needed
 }
@@ -33,7 +33,7 @@ export interface Donor {
   bloodGroup: BloodGroup;
   location: string; // City/Area
   contactNumber: string;
-  fcmToken?: string;
+  fcmToken?: string; // Already string | undefined, which is correct
   available?: boolean; // To mark availability status
   lastDonated?: Timestamp;
   createdAt: Timestamp;

@@ -33,11 +33,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           const firestoreData = userDocSnap.data();
-          // Ensure conversion of potential nulls from Firestore to undefined for UserProfile
           const profileData: UserProfile = {
             uid: firestoreData.uid,
-            email: firestoreData.email === null ? undefined : firestoreData.email,
-            displayName: firestoreData.displayName === null ? undefined : firestoreData.displayName,
+            email: firestoreData.email ?? undefined, // Coerce null to undefined
+            displayName: firestoreData.displayName ?? undefined, // Coerce null to undefined
             role: firestoreData.role,
           };
           setUserProfile(profileData);
