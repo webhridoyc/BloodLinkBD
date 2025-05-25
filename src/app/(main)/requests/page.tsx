@@ -32,7 +32,7 @@ export default function ViewRequestsPage() {
       const fetchedRequests: BloodRequest[] = [];
       querySnapshot.forEach((doc) => {
         fetchedRequests.push({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt as Timestamp } as BloodRequest);
-      });
+      });      
       setRequests(fetchedRequests);
       setLoading(false);
     }, (error) => {

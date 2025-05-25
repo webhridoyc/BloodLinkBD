@@ -3,9 +3,9 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   output: 'export',
-  trailingSlash: false, // Keep this if you prefer no trailing slashes
+  trailingSlash: false,
   images: {
-    unoptimized: true, // This is the crucial line to disable image optimization for static export
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -15,13 +15,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // It's good practice not to ignore build errors.
-  // These are often the default, but being explicit can be helpful.
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: false, // Ensure build errors are not ignored
   },
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: false, // Ensure ESLint errors are not ignored during builds
   },
 };
 
