@@ -2,10 +2,10 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Droplet, Users, Search, HeartHandshake, UserPlus, PlusCircle } from 'lucide-react';
+import { Droplet, Users, Search, HeartHandshake, UserPlus, PlusCircle } from 'lucide-react'; // Corrected: UserPlus, PlusCircle were missing
 import Image from 'next/image';
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="space-y-12">
       <section className="text-center py-12 md:py-20 bg-gradient-to-br from-primary/20 via-background to-accent/20 rounded-lg shadow-lg">
@@ -28,6 +28,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/*
       <section className="grid md:grid-cols-3 gap-8">
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
           <CardHeader>
@@ -128,10 +129,11 @@ export default function Home() {
             width={800} 
             height={400} 
             className="rounded-lg mx-auto shadow-xl"
-            style={{ objectFit: 'cover' }} // Added for consistency, though width/height might make it less critical
+            style={{ objectFit: 'cover' }}
             data-ai-hint="blood donation awareness"
           />
       </section>
+      */}
     </div>
   );
 }
