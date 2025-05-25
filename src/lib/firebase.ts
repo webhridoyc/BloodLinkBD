@@ -1,19 +1,19 @@
 
-import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
-import { getFirestore, Firestore } from "firebase/firestore";
-import { getMessaging, Messaging } from "firebase/messaging";
-import { getAnalytics, Analytics } from "firebase/analytics"; // Added Analytics
+import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getMessaging, type Messaging } from "firebase/messaging";
+import { getAnalytics, type Analytics } from "firebase/analytics";
 
-// User-provided Firebase configuration
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCka25-yNdJUDCpdi7D-dDyFVDiBdaIY4Q",
-  authDomain: "bloodshare-bd.firebaseapp.com",
-  projectId: "bloodshare-bd",
-  storageBucket: "bloodshare-bd.firebasestorage.app", // Corrected based on user input
-  messagingSenderId: "947897978001",
-  appId: "1:947897978001:web:c758936d1c709cb0ff0330",
-  measurementId: "G-8L31M1VK1V"
+  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M",
+  authDomain: "bloodlink-bd.firebaseapp.com",
+  projectId: "bloodlink-bd",
+  storageBucket: "bloodlink-bd.firebasestorage.app",
+  messagingSenderId: "290377663920",
+  appId: "1:290377663920:web:e84b28e4a922ada8c04275"
+  // measurementId is optional and not included in your provided config
 };
 
 let app: FirebaseApp;
@@ -40,6 +40,9 @@ if (typeof window !== "undefined") {
     messaging = undefined;
   }
 
+  // Initialize Analytics if measurementId is present, or if it can be auto-detected
+  // It's safe to call getAnalytics even if measurementId isn't explicitly in firebaseConfig
+  // as Firebase can sometimes auto-detect it or initialize with limited functionality.
   try {
     analytics = getAnalytics(app);
   } catch (error) {
