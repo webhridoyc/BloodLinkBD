@@ -6,14 +6,15 @@ import { getMessaging, type Messaging } from "firebase/messaging";
 import { getAnalytics, type Analytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
+// IMPORTANT: Make sure the projectId below matches the one in your .firebaserc file
 const firebaseConfig = {
-  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M",
-  authDomain: "bloodlink-bd.firebaseapp.com",
-  projectId: "bloodlink-bd",
-  storageBucket: "bloodlink-bd.firebasestorage.app",
-  messagingSenderId: "290377663920",
-  appId: "1:290377663920:web:e84b28e4a922ada8c04275"
-  // measurementId is optional and not included in your provided config
+  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M", // Keep your actual API key
+  authDomain: "bloodlink-bd.firebaseapp.com", // Adjust if your authDomain changed with project ID
+  projectId: "YOUR_CORRECT_PROJECT_ID_HERE", // Replace with your actual project ID
+  storageBucket: "bloodlink-bd.firebasestorage.app", // Adjust if your storageBucket changed
+  messagingSenderId: "290377663920", // Keep your actual messagingSenderId
+  appId: "1:290377663920:web:e84b28e4a922ada8c04275" // Keep your actual appId
+  // measurementId is optional
 };
 
 let app: FirebaseApp;
@@ -40,9 +41,6 @@ if (typeof window !== "undefined") {
     messaging = undefined;
   }
 
-  // Initialize Analytics if measurementId is present, or if it can be auto-detected
-  // It's safe to call getAnalytics even if measurementId isn't explicitly in firebaseConfig
-  // as Firebase can sometimes auto-detect it or initialize with limited functionality.
   try {
     analytics = getAnalytics(app);
   } catch (error) {
