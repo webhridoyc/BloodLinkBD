@@ -1,0 +1,11 @@
+{
+  "name": "nextjs-server",
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "next": "latest",
+    "firebase-functions": "^4.4.1",
+    "firebase-admin": "^11.10.1"
+  }
+}
