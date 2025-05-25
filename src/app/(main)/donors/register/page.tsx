@@ -78,6 +78,11 @@ export default function RegisterDonorPage() {
     setIsSubmitting(true);
     
     const fcmToken = await requestNotificationPermissionAndGetToken(); // fcmToken can be string | null
+    const validBloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const;
+
+    if (!validBloodGroups.includes(data.bloodGroup as any)) {
+      throw new Error('Invalid blood group');
+    }
 
     try {
       if (existingDonor && existingDonor.id) {
@@ -93,7 +98,7 @@ export default function RegisterDonorPage() {
         // Add new donor document
         const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
           ...data,
-          userId: user.uid, 
+          bloodGroup: data.bloodGroup as BloodGroup,
           fcmToken: fcmToken || undefined, // Ensures undefined if fcmToken is null
           available: true, // Default to available
           createdAt: serverTimestamp(),
