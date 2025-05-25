@@ -1,14 +1,15 @@
 
 "use client";
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form as ShadcnForm, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+// Label component is not directly used, FormLabel is used.
+// import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
 import { bloodGroups, urgencyLevels, type BloodRequest, type BloodGroup, type UrgencyLevel } from '@/types';
  
@@ -36,10 +37,10 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
     defaultValues: {
       requesterName: defaultValues?.requesterName ?? "",
       patientName: defaultValues?.patientName ?? "",
-      bloodGroup: defaultValues?.bloodGroup, // For Select, undefined is fine initially
+      bloodGroup: defaultValues?.bloodGroup,
       location: defaultValues?.location ?? "",
       contactInformation: defaultValues?.contactInformation ?? "",
-      urgency: defaultValues?.urgency, // For Select, undefined is fine initially
+      urgency: defaultValues?.urgency,
       additionalNotes: defaultValues?.additionalNotes ?? "",
     },
   });
@@ -50,7 +51,7 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
   };
 
   return (
-    <Form {...form}>
+    <ShadcnForm {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
             <FormField
@@ -178,6 +179,6 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
           )}
         </Button>
       </form>
-    </Form>
+    </ShadcnForm>
   );
 }

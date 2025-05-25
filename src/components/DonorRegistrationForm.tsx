@@ -6,10 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+// Label component is not directly used, FormLabel is used.
+// import { Label } from '@/components/ui/label'; 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { bloodGroups, type Donor, type BloodGroup } from '@/types';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form as ShadcnForm, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 const donorSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -31,7 +32,7 @@ export function DonorRegistrationForm({ onSubmit, defaultValues, isLoading }: Do
     resolver: zodResolver(donorSchema),
     defaultValues: {
       fullName: defaultValues?.fullName ?? "",
-      bloodGroup: defaultValues?.bloodGroup, // For Select, undefined is fine initially
+      bloodGroup: defaultValues?.bloodGroup,
       location: defaultValues?.location ?? "",
       contactNumber: defaultValues?.contactNumber ?? "",
     },
@@ -43,7 +44,7 @@ export function DonorRegistrationForm({ onSubmit, defaultValues, isLoading }: Do
   };
 
   return (
-    <Form {...form}>
+    <ShadcnForm {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <FormField
           control={form.control}
@@ -120,6 +121,6 @@ export function DonorRegistrationForm({ onSubmit, defaultValues, isLoading }: Do
           )}
         </Button>
       </form>
-    </Form>
+    </ShadcnForm>
   );
 }
