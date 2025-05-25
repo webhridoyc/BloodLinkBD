@@ -8,10 +8,10 @@ import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BloodRequestForm, type BloodRequestFormInputs } from '@/components/BloodRequestForm';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, ShieldAlert } from 'lucide-react';
-import type { BloodRequest, BloodGroup } from '@/types';
+import { PlusCircle } from 'lucide-react';
+import type { BloodRequest, BloodGroup, UrgencyLevel } from '@/types';
 
 export default function NewRequestPage() {
   const { user, loading: authLoading } = useProtectedRoute();
@@ -26,13 +26,12 @@ export default function NewRequestPage() {
     }
     setIsSubmitting(true);
     try {
-      // data.bloodGroup and data.urgency are already correctly typed from BloodRequestFormInputs
       const newRequestData: Omit<BloodRequest, 'id' | 'createdAt'> & { createdAt: any } = { 
         userId: user.uid,
         requesterName: data.requesterName,
         patientName: data.patientName,
-        bloodGroup: data.bloodGroup as BloodGroup,
-        urgency: data.urgency as UrgencyLevel,
+        bloodGroup: data.bloodGroup, // Type is already BloodGroup from Zod schema
+        urgency: data.urgency, // Type is already UrgencyLevel from Zod schema
         location: data.location,
         contactInformation: data.contactInformation,
         additionalNotes: data.additionalNotes,
