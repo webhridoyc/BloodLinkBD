@@ -10,7 +10,6 @@ export interface UserProfile {
 }
 
 export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-export type UrgencyLevel = "Urgent" | "Moderate" | "Low";
 
 export interface BloodRequest {
   id?: string; // Firestore document ID
@@ -19,7 +18,6 @@ export interface BloodRequest {
   patientName?: string; // Optional: name of patient
   bloodGroup: BloodGroup;
   location: string; // Hospital/Location
-  urgency: UrgencyLevel;
   contactInformation: string;
   additionalNotes?: string;
   createdAt: Timestamp;
@@ -58,4 +56,3 @@ export interface MatchedPair {
 }
 
 export const bloodGroups: BloodGroup[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-export const urgencyLevels: UrgencyLevel[] = ["Urgent", "Moderate", "Low"];

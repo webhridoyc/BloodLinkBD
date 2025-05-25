@@ -33,7 +33,6 @@ export default function NewRequestPage() {
         patientName: data.patientName,
         bloodGroup: data.bloodGroup as BloodGroup,
         location: data.location,
-        urgency: data.urgency,
         contactInformation: data.contactInformation,
         additionalNotes: data.additionalNotes,
         status: 'active',

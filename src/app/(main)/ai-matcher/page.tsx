@@ -27,7 +27,7 @@ interface AiMatcherServiceInput {
     id: string;
     bloodGroup: BloodRequest['bloodGroup'];
     location: string;
-    urgency: BloodRequest['urgency'];
+    urgency: BloodRequest['urgency']; // Added urgency field
     contactInformation: string;
     additionalNotes?: string;
   }>;
@@ -108,7 +108,7 @@ export default function AiMatcherPage() {
 
       setMatches(enrichedMatches);
 
-      if (enrichedMatches.length > 0) {
+      if (result.data.length > 0) {
         toast({ title: "Matching Complete!", description: `${enrichedMatches.length} potential match(es) found.` });
       } else {
         toast({ title: "No Matches Found", description: "The AI could not find any suitable matches with the current data." });

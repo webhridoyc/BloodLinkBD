@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
 import { bloodGroups, urgencyLevels, type BloodRequest, type BloodGroup, type UrgencyLevel } from '@/types';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
@@ -17,7 +17,6 @@ const requestSchema = z.object({
   patientName: z.string().min(2, "Patient name is too short").optional(),
   bloodGroup: z.enum(bloodGroups, { required_error: "Blood group is required" }),
   location: z.string().min(3, "Location is required (e.g., Hospital Name, Area)"),
-  urgency: z.enum(urgencyLevels, { required_error: "Urgency level is required" }),
   contactInformation: z.string().min(10, "Valid contact information is required"),
   additionalNotes: z.string().max(500, "Notes are too long").optional(),
 });
@@ -38,7 +37,6 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
       patientName: defaultValues?.patientName ?? "",
       bloodGroup: defaultValues?.bloodGroup, // For Select, undefined is fine initially
       location: defaultValues?.location ?? "",
-      urgency: defaultValues?.urgency ?? 'Moderate',
       contactInformation: defaultValues?.contactInformation ?? "",
       additionalNotes: defaultValues?.additionalNotes ?? "",
     },
@@ -97,28 +95,6 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
                   <SelectContent>
                     {bloodGroups.map(group => (
                       <SelectItem key={group} value={group}>{group}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="urgency"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Urgency Level</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select urgency" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {urgencyLevels.map(level => (
-                      <SelectItem key={level} value={level}>{level}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
