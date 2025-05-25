@@ -46,8 +46,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Create a basic profile if it doesn't exist
           const newProfile: UserProfile = {
             uid: firebaseUser.uid,
-            email: firebaseUser.email ?? undefined, // Convert null to undefined
-            displayName: firebaseUser.displayName ?? undefined, // Convert null to undefined
+            email: firebaseUser.email ?? undefined, // Coerce null to undefined
+            displayName: firebaseUser.displayName ?? undefined, // Coerce null to undefined
             role: 'user', // Default role
           };
           await setDoc(userDocRef, newProfile);
