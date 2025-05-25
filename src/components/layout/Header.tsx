@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { HeartHandshake, LogIn, LogOut, User, UserPlus, Search, HospitalIcon, Phone, ListChecks, Users, PlusCircle, Menu as MenuIcon, Settings } from 'lucide-react'; // Added MenuIcon & Settings
+import { HeartHandshake, LogIn, LogOut, User, UserPlus, Search, HospitalIcon, Phone, ListChecks, Users, PlusCircle, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePathname, useRouter } from 'next/navigation';
@@ -15,8 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"; 
-import { useState } from 'react';
+// Removed Sheet, SheetContent, SheetTrigger, MenuIcon imports
+// Removed useState import
 
 const navLinks = [
   { href: '/requests', label: 'View Requests', icon: ListChecks },
@@ -32,7 +32,7 @@ export default function Header() {
   const { user, userProfile, logout, loading, isAdmin } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // Removed mobileMenuOpen state
 
   const getInitials = (name?: string | null) => {
     if (!name) return 'U';
@@ -49,15 +49,12 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center space-x-2 lg:space-x-4">
           {navLinks.map((link) => {
-            // If link is protected and user is not logged in (regardless of loading state), don't render
+            if (link.protected && !user && loading) {
+              return null;
+            }
             if (link.protected && !user && !loading) {
               return null;
             }
-            // If link is protected, user is not logged in, but auth is still loading, also don't render yet.
-            if (link.protected && !user && loading) {
-                return null;
-            }
-
             return (
             <Button
               key={link.href}
@@ -117,7 +114,7 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="space-x-2">
+            <div className="hidden md:flex space-x-2"> {/* Hide login/signup on small screens if mobile menu is removed */}
               <Button variant="outline" size="sm" asChild>
                 <Link href="/login" className="flex items-center gap-1">
                   <LogIn className="h-4 w-4" /> Login
@@ -131,67 +128,7 @@ export default function Header() {
             </div>
           )}
           
-           <div className="md:hidden">
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MenuIcon />
-                  <span className="sr-only">Toggle menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col space-y-4 mt-8">
-                  {navLinks.map((link) => {
-                     if (link.protected && !user && !loading) { // Also check !loading here
-                       return null;
-                     }
-                     if (link.protected && !user && loading) {
-                        return null;
-                     }
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent ${pathname === link.href ? "bg-secondary font-semibold" : ""}`}
-                      >
-                        <link.icon className="h-5 w-5" />
-                        {link.label}
-                      </Link>
-                    );
-                  })}
-                  {/* Add Profile/Logout or Login/Signup for mobile */}
-                  <div className="pt-4 border-t">
-                    {user ? (
-                      <>
-                        <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent ${pathname === "/profile" ? "bg-secondary font-semibold" : ""}`}>
-                          <User className="h-5 w-5" /> Profile
-                        </Link>
-                        {isAdmin && (
-                           <Link href="/admin/dashboard" onClick={() => setMobileMenuOpen(false)} className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent ${pathname.startsWith("/admin") ? "bg-secondary font-semibold" : ""}`}>
-                            <Settings className="h-5 w-5" />
-                            Admin Panel
-                          </Link>
-                        )}
-                        <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 p-2 rounded-md hover:bg-accent w-full text-left">
-                          <LogOut className="h-5 w-5" /> Logout
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link href="/login" onClick={() => setMobileMenuOpen(false)} className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent ${pathname === "/login" ? "bg-secondary font-semibold" : ""}`}>
-                          <LogIn className="h-5 w-5" /> Login
-                        </Link>
-                        <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent ${pathname === "/signup" ? "bg-secondary font-semibold" : ""}`}>
-                          <UserPlus className="h-5 w-5" /> Sign Up
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
-           </div>
+           {/* Mobile menu section removed */}
         </div>
       </div>
     </header>
