@@ -3,6 +3,7 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   output: 'export', // Enable static export
+  trailingSlash: false, // Ensure consistency with Firebase Hosting
   /* config options here */
   typescript: {
     ignoreBuildErrors: false, // Changed to false
