@@ -2,7 +2,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export', // Ensure static export
+  output: 'export',
   trailingSlash: false,
   typescript: {
     ignoreBuildErrors: false,
@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: false,
   },
   images: {
-    unoptimized: true, // Important for static hosting environments like InfinityFree
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',

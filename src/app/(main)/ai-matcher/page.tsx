@@ -27,7 +27,6 @@ interface AiMatcherServiceInput {
     id: string;
     bloodGroup: BloodRequest['bloodGroup'];
     location: string;
-    urgency: BloodRequest['urgency']; // Added urgency field
     contactInformation: string;
     additionalNotes?: string;
   }>;
@@ -92,7 +91,6 @@ export default function AiMatcherPage() {
           id: r.id!,
           bloodGroup: r.bloodGroup,
           location: r.location,
-          urgency: r.urgency,
           contactInformation: r.contactInformation,
           additionalNotes: r.additionalNotes || undefined,
         })),
@@ -180,7 +178,6 @@ export default function AiMatcherPage() {
                       <li><strong>Patient:</strong> {match.request.patientName || 'N/A'}</li>
                       <li><strong>Blood Group:</strong> <span className="font-bold text-primary">{match.request.bloodGroup}</span></li>
                       <li><strong>Location:</strong> {match.request.location}</li>
-                      <li><strong>Urgency:</strong> {match.request.urgency}</li>
                       <li><strong>Contact:</strong> {match.request.contactInformation}</li>
                     </ul>
                   ) : <p className="text-muted-foreground">Request details not found.</p>}
