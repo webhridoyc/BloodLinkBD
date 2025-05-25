@@ -3,8 +3,8 @@ import type { Timestamp } from "firebase/firestore";
 
 export interface UserProfile {
   uid: string;
-  email: string | null;
-  displayName?: string | null;
+  email?: string; // Changed from string | null to string | undefined
+  displayName?: string; // Changed from string | null (optional means string | undefined)
   role?: 'user' | 'admin';
   // Add other profile fields if needed
 }

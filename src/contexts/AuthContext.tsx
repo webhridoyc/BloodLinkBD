@@ -29,19 +29,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       if (firebaseUser) {
         setUser(firebaseUser);
-        // Fetch or create user profile from Firestore
         const userDocRef = doc(db, "users", firebaseUser.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
-          const profileData = userDocSnap.data() as UserProfile;
+          const firestoreData = userDocSnap.data();
+          // Ensure conversion of potential nulls from Firestore to undefined for UserProfile
+          const profileData: UserProfile = {
+            uid: firestoreData.uid,
+            email: firestoreData.email === null ? undefined : firestoreData.email,
+            displayName: firestoreData.displayName === null ? undefined : firestoreData.displayName,
+            role: firestoreData.role,
+          };
           setUserProfile(profileData);
           setIsAdmin(profileData.role === 'admin');
         } else {
           // Create a basic profile if it doesn't exist
           const newProfile: UserProfile = {
             uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            displayName: firebaseUser.displayName,
+            email: firebaseUser.email ?? undefined, // Convert null to undefined
+            displayName: firebaseUser.displayName ?? undefined, // Convert null to undefined
             role: 'user', // Default role
           };
           await setDoc(userDocRef, newProfile);
