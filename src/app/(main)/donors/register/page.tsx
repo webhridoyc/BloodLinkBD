@@ -85,7 +85,7 @@ export default function RegisterDonorPage() {
         const donorDocRef = doc(db, "donors", existingDonor.id);
         const donorUpdateData = {
           fullName: data.fullName,
-          bloodGroup: data.bloodGroup, // data.bloodGroup is BloodGroup from DonorFormInputs
+          bloodGroup: data.bloodGroup as BloodGroup, // Explicitly cast to BloodGroup
           location: data.location,
           contactNumber: data.contactNumber,
           // Use new fcmToken if available, otherwise keep existing, otherwise undefined
@@ -97,7 +97,7 @@ export default function RegisterDonorPage() {
         // Add new donor document
         const newDonorData: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
           fullName: data.fullName,
-          bloodGroup: data.bloodGroup, // data.bloodGroup is BloodGroup from DonorFormInputs
+          bloodGroup: data.bloodGroup as BloodGroup, // Explicitly cast to BloodGroup
           location: data.location,
           contactNumber: data.contactNumber,
           userId: user.uid,
