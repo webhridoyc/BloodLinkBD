@@ -6,14 +6,15 @@ import { getMessaging, type Messaging } from "firebase/messaging";
 import { getAnalytics, type Analytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
-// IMPORTANT: Make sure the projectId below matches the one in your .firebaserc file
+// IMPORTANT: Replace with your actual Firebase project configuration values.
+// The projectId below MUST match the one in your .firebaserc file.
 const firebaseConfig = {
-  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M", // Keep your actual API key
-  authDomain: "bloodlink-bd.firebaseapp.com", // Adjust if your authDomain changed with project ID
-  projectId: "YOUR_CORRECT_PROJECT_ID_HERE", // Replace with your actual project ID
-  storageBucket: "bloodlink-bd.firebasestorage.app", // Adjust if your storageBucket changed
-  messagingSenderId: "290377663920", // Keep your actual messagingSenderId
-  appId: "1:290377663920:web:e84b28e4a922ada8c04275" // Keep your actual appId
+  apiKey: "YOUR_ACTUAL_API_KEY", // Replace with your real API Key
+  authDomain: "bloodlink-bd.firebaseapp.com", // Ensure 'bloodlink-bd' is your correct projectId
+  projectId: "bloodlink-bd", // Ensure this is your correct projectId
+  storageBucket: "bloodlink-bd.appspot.com", // Ensure 'bloodlink-bd' is your correct projectId
+  messagingSenderId: "YOUR_ACTUAL_MESSAGING_SENDER_ID", // Replace with your real Messaging Sender ID
+  appId: "YOUR_ACTUAL_APP_ID", // Replace with your real App ID
   // measurementId is optional
 };
 

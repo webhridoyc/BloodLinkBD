@@ -15,8 +15,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // typescript: { ignoreBuildErrors: false } is the default when strict: true in tsconfig.json
-  // eslint: { ignoreDuringBuilds: false } is the default
+  // Ensure build errors are not ignored
+  typescript: { 
+    ignoreBuildErrors: false 
+  },
+  eslint: { 
+    ignoreDuringBuilds: false 
+  },
 };
 
 export default nextConfig;
