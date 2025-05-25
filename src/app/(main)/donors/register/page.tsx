@@ -77,7 +77,7 @@ export default function RegisterDonorPage() {
     }
     setIsSubmitting(true);
     
-    const fcmToken = await requestNotificationPermissionAndGetToken();
+    const fcmToken = await requestNotificationPermissionAndGetToken(); // fcmToken can be string | null
 
     try {
       if (existingDonor && existingDonor.id) {
@@ -85,8 +85,8 @@ export default function RegisterDonorPage() {
         const donorDocRef = doc(db, "donors", existingDonor.id);
         await updateDoc(donorDocRef, {
           ...data,
+          // Use new fcmToken if available, otherwise keep existing, otherwise undefined
           fcmToken: fcmToken || existingDonor.fcmToken || undefined, 
-          // createdAt will not be updated, it's the initial registration time
         });
         toast({ title: "Success!", description: "Your donor profile has been updated." });
       } else {
@@ -94,7 +94,7 @@ export default function RegisterDonorPage() {
         const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
           ...data,
           userId: user.uid, 
-          fcmToken: fcmToken || undefined, // Corrected line: ensures undefined if fcmToken is null
+          fcmToken: fcmToken || undefined, // Ensures undefined if fcmToken is null
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
