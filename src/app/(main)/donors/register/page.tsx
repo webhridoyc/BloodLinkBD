@@ -92,9 +92,9 @@ export default function RegisterDonorPage() {
       } else {
         // Add new donor document
         const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
-          userId: user.uid,
           ...data,
-          fcmToken: fcmToken || undefined,
+          userId: user.uid, // Assuming userId is a required field
+          fcmToken: fcmToken || null,
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
