@@ -3,13 +3,17 @@ import type { Timestamp } from "firebase/firestore";
 
 export interface UserProfile {
   uid: string;
-  email?: string; // Changed from string | null
-  displayName?: string; // Changed from string | null
+  email?: string;
+  displayName?: string;
   role?: 'user' | 'admin';
   // Add other profile fields if needed
 }
 
 export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
+export const bloodGroups: BloodGroup[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+export type UrgencyLevel = 'Urgent' | 'Moderate' | 'Low';
+export const urgencyLevels: UrgencyLevel[] = ["Urgent", "Moderate", "Low"]; // Ensure this is exported
 
 export interface BloodRequest {
   id?: string; // Firestore document ID
@@ -21,7 +25,7 @@ export interface BloodRequest {
   contactInformation: string;
   additionalNotes?: string;
   urgency: UrgencyLevel;
-  createdAt: Timestamp;
+  createdAt: Timestamp; // Changed from any to Timestamp
   status: 'active' | 'fulfilled' | 'pending'; 
 }
 
@@ -32,7 +36,7 @@ export interface Donor {
   bloodGroup: BloodGroup;
   location: string; // City/Area
   contactNumber: string;
-  fcmToken?: string; // Already string | undefined, which is correct
+  fcmToken?: string; 
   available?: boolean; // To mark availability status
   lastDonated?: Timestamp;
   createdAt: Timestamp;
@@ -41,7 +45,7 @@ export interface Donor {
 export interface Hospital {
   id: string;
   name: string;
-  address: string; // Changed from location to address for clarity
+  address: string; 
   contact?: string;
   imageUrl: string;
   dataAiHint?: string;
@@ -55,7 +59,3 @@ export interface MatchedPair {
   donor?: Donor;
   request?: BloodRequest;
 }
-
-export const bloodGroups: BloodGroup[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-
-export type UrgencyLevel = 'Urgent' | 'Moderate' | 'Low';

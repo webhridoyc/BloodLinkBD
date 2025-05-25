@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useState }
-from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +10,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
-import type { BloodRequest, BloodGroup, UrgencyLevel } from '@/types';
+import type { BloodRequest } from '@/types'; // UrgencyLevel and BloodGroup are part of BloodRequest
 
 export default function NewRequestPage() {
   const { user, loading: authLoading } = useProtectedRoute();
@@ -28,13 +27,13 @@ export default function NewRequestPage() {
     try {
       const newRequestData: Omit<BloodRequest, 'id' | 'createdAt'> & { createdAt: any } = { 
         userId: user.uid,
-        requesterName: data.requesterName,
-        patientName: data.patientName,
+        requesterName: data.requesterName ?? undefined, // Ensure undefined if not present
+        patientName: data.patientName ?? undefined,   // Ensure undefined if not present
         bloodGroup: data.bloodGroup, // Type is already BloodGroup from Zod schema
         urgency: data.urgency, // Type is already UrgencyLevel from Zod schema
         location: data.location,
         contactInformation: data.contactInformation,
-        additionalNotes: data.additionalNotes,
+        additionalNotes: data.additionalNotes ?? undefined, // Ensure undefined if not present
         status: 'active',
         createdAt: serverTimestamp(),
       };

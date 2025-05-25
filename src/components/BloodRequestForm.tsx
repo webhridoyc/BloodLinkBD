@@ -1,16 +1,34 @@
-
 "use client";
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
-import { bloodGroups, urgencyLevels, type BloodGroup, type UrgencyLevel } from '@/types';
- 
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  bloodGroups,
+  urgencyLevels,
+  type BloodGroup,
+  type UrgencyLevel,
+} from "@/types";
+
 const requestSchema = z.object({
   requesterName: z.string().min(2, "Name is too short").optional(),
   patientName: z.string().min(2, "Patient name is too short").optional(),
@@ -29,9 +47,14 @@ interface BloodRequestFormProps {
   isLoading?: boolean;
 }
 
-export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRequestFormProps) {
+export function BloodRequestForm({
+  onSubmit,
+  defaultValues,
+  isLoading,
+}: BloodRequestFormProps) {
   const form = useForm<BloodRequestFormInputs>({
     resolver: zodResolver(requestSchema),
+    mode: "onChange",
     defaultValues: {
       requesterName: defaultValues?.requesterName ?? "",
       patientName: defaultValues?.patientName ?? "",
@@ -45,39 +68,39 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
 
   const handleFormSubmit: SubmitHandler<BloodRequestFormInputs> = async (data) => {
     await onSubmit(data);
-    // form.reset(); // Optionally reset form on successful submission
+    // form.reset(); // Uncomment if you want to reset the form after submission
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
-            <FormField
+          <FormField
             control={form.control}
             name="requesterName"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Your Name (Optional)</FormLabel>
                 <FormControl>
-                    <Input placeholder="Your full name" {...field} />
+                  <Input placeholder="Your full name" {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
-            <FormField
+          />
+          <FormField
             control={form.control}
             name="patientName"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Patient&apos;s Name (Optional)</FormLabel>
                 <FormControl>
-                    <Input placeholder="Patient's full name" {...field} />
+                  <Input placeholder="Patient's full name" {...field} />
                 </FormControl>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
+          />
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
@@ -94,8 +117,10 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {bloodGroups.map(group => (
-                      <SelectItem key={group} value={group}>{group}</SelectItem>
+                    {bloodGroups.map((group) => (
+                      <SelectItem key={group} value={group}>
+                        {group}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -116,14 +141,17 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {urgencyLevels.map(level => (
-                      <SelectItem key={level} value={level}>{level}</SelectItem>
+                    {urgencyLevels.map((level) => (
+                      <SelectItem key={level} value={level}>
+                        {level}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
+          />
         </div>
 
         <FormField
@@ -169,7 +197,7 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
           )}
         />
 
-        <Button type="submit" className="w-full md:w-auto" disabled={isLoading}>
+        <Button type="submit" className="w-full md:w-auto" disabled={isLoading || !form.formState.isValid}>
           {isLoading ? (
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
           ) : (

@@ -1,4 +1,3 @@
-
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -16,11 +15,11 @@ const nextConfig: NextConfig = {
     ],
   },
   // Ensure build errors are not ignored
-  typescript: { 
-    ignoreBuildErrors: false 
+  typescript: {
+    ignoreBuildErrors: false
   },
-  eslint: { 
-    ignoreDuringBuilds: false 
+  eslint: {
+    ignoreDuringBuilds: false
   },
 };
 
