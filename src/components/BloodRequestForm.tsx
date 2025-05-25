@@ -1,6 +1,7 @@
 
 "use client";
 
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,14 +11,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
 import { bloodGroups, urgencyLevels, type BloodRequest, type BloodGroup, type UrgencyLevel } from '@/types';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-
+ 
 const requestSchema = z.object({
   requesterName: z.string().min(2, "Name is too short").optional(),
   patientName: z.string().min(2, "Patient name is too short").optional(),
   bloodGroup: z.enum(bloodGroups, { required_error: "Blood group is required" }),
   location: z.string().min(3, "Location is required (e.g., Hospital Name, Area)"),
   contactInformation: z.string().min(10, "Valid contact information is required"),
+  urgency: z.enum(urgencyLevels, { required_error: "Urgency level is required" }),
   additionalNotes: z.string().max(500, "Notes are too long").optional(),
 });
 
@@ -38,6 +39,7 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
       bloodGroup: defaultValues?.bloodGroup, // For Select, undefined is fine initially
       location: defaultValues?.location ?? "",
       contactInformation: defaultValues?.contactInformation ?? "",
+      urgency: defaultValues?.urgency, // For Select, undefined is fine initially
       additionalNotes: defaultValues?.additionalNotes ?? "",
     },
   });
@@ -102,6 +104,27 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="urgency"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Urgency Level</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select urgency level" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {urgencyLevels.map(level => (
+                      <SelectItem key={level} value={level}>{level}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
         </div>
 
         <FormField

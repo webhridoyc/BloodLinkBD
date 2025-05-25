@@ -20,6 +20,7 @@ export interface BloodRequest {
   location: string; // Hospital/Location
   contactInformation: string;
   additionalNotes?: string;
+  urgency: UrgencyLevel;
   createdAt: Timestamp;
   status: 'active' | 'fulfilled' | 'pending'; 
 }
@@ -56,3 +57,5 @@ export interface MatchedPair {
 }
 
 export const bloodGroups: BloodGroup[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+export type UrgencyLevel = 'Urgent' | 'Moderate' | 'Low';

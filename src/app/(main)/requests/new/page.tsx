@@ -10,7 +10,7 @@ import { BloodRequestForm, type BloodRequestFormInputs } from '@/components/Bloo
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, ShieldAlert } from 'lucide-react';
 import type { BloodRequest, BloodGroup } from '@/types';
 
 export default function NewRequestPage() {
@@ -32,6 +32,7 @@ export default function NewRequestPage() {
         requesterName: data.requesterName,
         patientName: data.patientName,
         bloodGroup: data.bloodGroup as BloodGroup,
+        urgency: data.urgency as UrgencyLevel,
         location: data.location,
         contactInformation: data.contactInformation,
         additionalNotes: data.additionalNotes,
