@@ -6,27 +6,26 @@ export interface UserProfile {
   email?: string;
   displayName?: string;
   role?: 'user' | 'admin';
-  // Add other profile fields if needed
 }
 
-export type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-export const bloodGroups: BloodGroup[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+export const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] as const;
+export type BloodGroup = typeof bloodGroups[number];
 
-export type UrgencyLevel = 'Urgent' | 'Moderate' | 'Low';
-export const urgencyLevels: UrgencyLevel[] = ["Urgent", "Moderate", "Low"]; // Ensure this is exported
+export const urgencyLevels = ["Urgent", "Moderate", "Low"] as const;
+export type UrgencyLevel = typeof urgencyLevels[number];
 
 export interface BloodRequest {
   id?: string; // Firestore document ID
   userId: string; // UID of the user who posted the request
-  requesterName?: string; // Optional: name of person posting
-  patientName?: string; // Optional: name of patient
+  requesterName?: string;
+  patientName?: string;
   bloodGroup: BloodGroup;
   location: string; // Hospital/Location
   contactInformation: string;
   additionalNotes?: string;
   urgency: UrgencyLevel;
-  createdAt: Timestamp; // Changed from any to Timestamp
-  status: 'active' | 'fulfilled' | 'pending'; 
+  createdAt: Timestamp;
+  status: 'active' | 'fulfilled' | 'pending';
 }
 
 export interface Donor {
@@ -36,7 +35,7 @@ export interface Donor {
   bloodGroup: BloodGroup;
   location: string; // City/Area
   contactNumber: string;
-  fcmToken?: string; 
+  fcmToken?: string;
   available?: boolean; // To mark availability status
   lastDonated?: Timestamp;
   createdAt: Timestamp;
@@ -45,7 +44,7 @@ export interface Donor {
 export interface Hospital {
   id: string;
   name: string;
-  address: string; 
+  address: string;
   contact?: string;
   imageUrl: string;
   dataAiHint?: string;
@@ -55,7 +54,6 @@ export interface MatchedPair {
   donorId: string;
   requestId: string;
   reason: string;
-  // Optionally enriched with full donor/request details for display
   donor?: Donor;
   request?: BloodRequest;
 }

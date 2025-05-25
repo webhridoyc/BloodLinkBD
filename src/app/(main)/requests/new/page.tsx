@@ -10,7 +10,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
-import type { BloodRequest } from '@/types'; // UrgencyLevel and BloodGroup are part of BloodRequest
+import type { BloodRequest } from '@/types';
 
 export default function NewRequestPage() {
   const { user, loading: authLoading } = useProtectedRoute();
@@ -25,21 +25,21 @@ export default function NewRequestPage() {
     }
     setIsSubmitting(true);
     try {
-      const newRequestData: Omit<BloodRequest, 'id' | 'createdAt'> & { createdAt: any } = { 
+      const newRequestData: Omit<BloodRequest, 'id' | 'createdAt'> & { createdAt: any } = {
         userId: user.uid,
-        requesterName: data.requesterName ?? undefined, // Ensure undefined if not present
-        patientName: data.patientName ?? undefined,   // Ensure undefined if not present
-        bloodGroup: data.bloodGroup, // Type is already BloodGroup from Zod schema
-        urgency: data.urgency, // Type is already UrgencyLevel from Zod schema
+        requesterName: data.requesterName ?? undefined,
+        patientName: data.patientName ?? undefined,
+        bloodGroup: data.bloodGroup,
+        urgency: data.urgency,
         location: data.location,
         contactInformation: data.contactInformation,
-        additionalNotes: data.additionalNotes ?? undefined, // Ensure undefined if not present
+        additionalNotes: data.additionalNotes ?? undefined,
         status: 'active',
         createdAt: serverTimestamp(),
       };
-      
+
       await addDoc(collection(db, "requests"), newRequestData);
-      
+
       toast({ title: "Success!", description: "Your blood request has been posted." });
       router.push('/requests'); // Redirect to requests list
     } catch (error) {
@@ -53,8 +53,8 @@ export default function NewRequestPage() {
   if (authLoading) {
     return <div className="text-center py-10">Loading...</div>;
   }
-  
-  if(!user && !authLoading) return null; // Protected route handles redirect
+
+  if (!user && !authLoading) return null; // Protected route handles redirect
 
   return (
     <div className="max-w-2xl mx-auto py-8">
