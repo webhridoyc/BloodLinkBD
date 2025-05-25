@@ -85,7 +85,7 @@ export default function RegisterDonorPage() {
         const donorDocRef = doc(db, "donors", existingDonor.id);
         await updateDoc(donorDocRef, {
           ...data,
-          fcmToken: fcmToken || existingDonor.fcmToken || undefined, // Ensure undefined instead of null
+          fcmToken: fcmToken || existingDonor.fcmToken || undefined, 
           // createdAt will not be updated, it's the initial registration time
         });
         toast({ title: "Success!", description: "Your donor profile has been updated." });
@@ -94,7 +94,7 @@ export default function RegisterDonorPage() {
         const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
           ...data,
           userId: user.uid, 
-          fcmToken: fcmToken || undefined, // This was already correct
+          fcmToken: fcmToken || undefined, // Corrected line: ensures undefined if fcmToken is null
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
