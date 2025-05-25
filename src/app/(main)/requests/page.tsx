@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { collection, query, where, orderBy, onSnapshot, DocumentData, QuerySnapshot, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import type { BloodRequest, BloodGroup } from '@/types';
+import type { BloodRequest, BloodGroup, UrgencyLevel } from '@/types'; // Added UrgencyLevel
 import { bloodGroups } from '@/types';
 import { BloodRequestCard } from '@/components/BloodRequestCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -49,7 +49,7 @@ export default function ViewRequestsPage() {
       .filter(req => locationFilter === "" || req.location.toLowerCase().includes(locationFilter.toLowerCase()))
       .sort((a, b) => {
         // Urgency sort: Urgent > Moderate > Low
-        const urgencyOrder = { Urgent: 1, Moderate: 2, Low: 3 };
+        const urgencyOrder: Record<UrgencyLevel, number> = { Urgent: 1, Moderate: 2, Low: 3 };
         if (urgencyOrder[a.urgency] < urgencyOrder[b.urgency]) return -1;
         if (urgencyOrder[a.urgency] > urgencyOrder[b.urgency]) return 1;
         // Then by recency (already handled by Firestore query in this basic setup)
