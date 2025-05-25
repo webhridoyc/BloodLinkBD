@@ -17,7 +17,7 @@ import { getToken, onMessage } from "firebase/messaging";
 const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "YOUR_VAPID_KEY_HERE_IF_ANY";
 
 
-async function requestNotificationPermissionAndGetToken() {
+async function requestNotificationPermissionAndGetToken(): Promise<string | null> {
   if (typeof window !== 'undefined' && 'Notification' in window && messaging) {
     try {
       const permission = await Notification.requestPermission();
@@ -85,7 +85,7 @@ export default function RegisterDonorPage() {
         const donorDocRef = doc(db, "donors", existingDonor.id);
         await updateDoc(donorDocRef, {
           ...data,
-          fcmToken: fcmToken || existingDonor.fcmToken || null, // Update token if new one is available
+          fcmToken: fcmToken || existingDonor.fcmToken || undefined, // Ensure undefined instead of null
           // createdAt will not be updated, it's the initial registration time
         });
         toast({ title: "Success!", description: "Your donor profile has been updated." });
@@ -93,8 +93,8 @@ export default function RegisterDonorPage() {
         // Add new donor document
         const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
           ...data,
-          userId: user.uid, // Assuming userId is a required field
-          fcmToken: fcmToken || null,
+          userId: user.uid, 
+          fcmToken: fcmToken || undefined, // This was already correct
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
