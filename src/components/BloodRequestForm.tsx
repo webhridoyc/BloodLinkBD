@@ -1,17 +1,15 @@
 
 "use client";
 
-import { Form as ShadcnForm, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-// Label component is not directly used, FormLabel is used.
-// import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/components/ui/select';
-import { bloodGroups, urgencyLevels, type BloodRequest, type BloodGroup, type UrgencyLevel } from '@/types';
+import { bloodGroups, urgencyLevels, type BloodGroup, type UrgencyLevel } from '@/types';
  
 const requestSchema = z.object({
   requesterName: z.string().min(2, "Name is too short").optional(),
@@ -51,7 +49,7 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
   };
 
   return (
-    <ShadcnForm {...form}>
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
             <FormField
@@ -179,6 +177,6 @@ export function BloodRequestForm({ onSubmit, defaultValues, isLoading }: BloodRe
           )}
         </Button>
       </form>
-    </ShadcnForm>
+    </Form>
   );
 }
