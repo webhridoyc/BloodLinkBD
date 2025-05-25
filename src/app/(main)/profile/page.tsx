@@ -9,7 +9,7 @@ import { LogOut, UserCircle, ShieldCheck } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfilePage() {
-  const { user: authUser, userProfile, loading, logout } = useProtectedRoute();
+  const { user: authUser, loading } = useProtectedRoute();
 
   const getInitials = (name?: string | null) => {
     if (!name) return 'U';
@@ -35,7 +35,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!authUser || !userProfile) {
+  if (!authUser) {
     // This should ideally not be reached due to useProtectedRoute,
     // but as a fallback:
     return <p>Please log in to view your profile.</p>;
@@ -46,18 +46,19 @@ export default function ProfilePage() {
       <Card className="shadow-xl overflow-hidden">
         <CardHeader className="bg-muted/30 p-8 text-center">
           <Avatar className="h-24 w-24 mx-auto mb-4 ring-4 ring-primary/50">
-            <AvatarImage src={authUser.photoURL || undefined} alt={userProfile.displayName || 'User'} />
-            <AvatarFallback className="text-3xl">{getInitials(userProfile.displayName || authUser.email)}</AvatarFallback>
+            <AvatarImage src={authUser.photoURL || undefined} alt={authUser.displayName || 'User'} />
+            <AvatarFallback className="text-3xl">{getInitials(authUser.displayName || authUser.email)}</AvatarFallback>
           </Avatar>
           <CardTitle className="text-3xl flex items-center justify-center gap-2">
-            <UserCircle className="h-8 w-8 text-primary" /> {userProfile.displayName || 'User Profile'}
+            <UserCircle className="h-8 w-8 text-primary" /> {authUser.displayName || 'User Profile'}
           </CardTitle>
           <CardDescription className="text-lg">{authUser.email}</CardDescription>
-          {userProfile.role === 'admin' && (
-            <div className="mt-2 inline-flex items-center gap-1 bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm">
+          {/* Assuming role might be available directly on authUser or fetched separately if needed */}
+          {/* {authUser.role === 'admin' && ( */}
+            {/* <div className="mt-2 inline-flex items-center gap-1 bg-accent text-accent-foreground px-3 py-1 rounded-full text-sm">
               <ShieldCheck className="h-4 w-4" /> Admin
             </div>
-          )}
+          )} */}
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div>
@@ -67,7 +68,8 @@ export default function ProfilePage() {
           {/* Add more profile details here as needed */}
           {/* For example, link to "My Requests" or "Donor Profile" if applicable */}
 
-          <Button onClick={logout} variant="destructive" className="w-full mt-6">
+          {/* Placeholder for logout. Actual logout logic needs to be implemented or obtained from AuthContext */}
+          <Button onClick={() => console.log('Logout functionality missing')} variant="destructive" className="w-full mt-6">
             <LogOut className="mr-2 h-4 w-4" /> Log Out
           </Button>
         </CardContent>

@@ -11,7 +11,7 @@ import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
-import type { BloodRequest } from '@/types';
+import type { BloodRequest, BloodGroup } from '@/types';
 
 export default function NewRequestPage() {
   const { user, loading: authLoading } = useProtectedRoute();
@@ -31,7 +31,7 @@ export default function NewRequestPage() {
         userId: user.uid,
         requesterName: data.requesterName,
         patientName: data.patientName,
-        bloodGroup: data.bloodGroup,
+        bloodGroup: data.bloodGroup as BloodGroup,
         location: data.location,
         urgency: data.urgency,
         contactInformation: data.contactInformation,
