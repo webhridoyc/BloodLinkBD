@@ -22,10 +22,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Ensure experimental.typedRoutes is false or not set, as it can conflict with `output: 'export'`
-  // experimental: {
-  //   typedRoutes: false, 
-  // },
 };
 
 export default nextConfig;
