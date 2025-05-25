@@ -2,7 +2,7 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export', // Enable static export
+  // output: 'export', // Removed for SSR with Firebase Functions
   trailingSlash: false, // Ensure consistency with Firebase Hosting
   /* config options here */
   typescript: {
@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: false, // Changed to false
   },
   images: {
-    unoptimized: true, // Required for static export with next/image
+    // unoptimized: true, // Removed as Next.js can optimize images in SSR
     remotePatterns: [
       {
         protocol: 'https',
