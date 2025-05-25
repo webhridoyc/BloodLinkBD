@@ -94,7 +94,7 @@ export default function RegisterDonorPage() {
         const newDonor: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
           userId: user.uid,
           ...data,
-          fcmToken: fcmToken || null,
+          fcmToken: fcmToken || undefined,
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
