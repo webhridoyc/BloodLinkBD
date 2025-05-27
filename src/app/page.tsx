@@ -8,20 +8,24 @@ import Image from 'next/image';
 export default function HomePage() {
   return (
     <div className="space-y-12">
-      <section className="text-center py-12 md:py-20 bg-gradient-to-br from-primary/20 via-background to-accent/20 rounded-lg shadow-lg">
-        <div className="container mx-auto px-4">
-          <HeartHandshake className="mx-auto h-16 w-16 text-primary mb-6" />
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
+      <section 
+        className="relative text-center py-12 md:py-20 rounded-lg shadow-lg overflow-hidden bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('https://i.ibb.co/DPsdpd8t/fotor-ai-20250527235547.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/60"></div> {/* Overlay */}
+        <div className="relative z-10 container mx-auto px-4">
+          <HeartHandshake className="mx-auto h-16 w-16 text-white mb-6" />
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
             Welcome to BloodLink BD
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-8">
             Your vital connection for blood donation in Bangladesh. Find donors, request blood, and save lives with ease.
           </p>
           <div className="space-x-4">
             <Button size="lg" asChild>
               <Link href="/requests/new">Request Blood</Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" className="bg-transparent hover:bg-white/10 border-white text-white hover:text-white" asChild>
               <Link href="/donors/register">Become a Donor</Link>
             </Button>
           </div>
