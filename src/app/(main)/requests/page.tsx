@@ -4,28 +4,27 @@
 import { useState, useEffect, useMemo } from 'react';
 import { collection, query, where, orderBy, onSnapshot, DocumentData, QuerySnapshot, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import type { BloodRequest, BloodGroup, UrgencyLevel } from '@/types'; // Added UrgencyLevel
-import { bloodGroups } from '@/types';
+import type { BloodRequest, BloodGroup, UrgencyLevel } from '@/types';
+import { bloodGroups, urgencyLevels } from '@/types'; // Ensure urgencyLevels is imported
 import { BloodRequestCard } from '@/components/BloodRequestCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ListChecks, Search, RotateCcw } from 'lucide-react';
+import { ListChecks, Search, RotateCcw, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function ViewRequestsPage() {
   const [requests, setRequests] = useState<BloodRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [bloodGroupFilter, setBloodGroupFilter] = useState<BloodGroup | "all">("all");
   const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
-    // Base query: order by urgency (custom logic needed as Firestore doesn't support multiple inequalities on different fields easily for complex sorting like 'Urgency' string)
-    // For simplicity, we sort by createdAt and then client-side for urgency if needed, or rely on combined field.
-    // The prompt mentions "sorted primarily by urgency, then by recency". Firestore doesn't do this well with string-based urgency.
-    // A common workaround is numeric urgency (Urgent=1, Moderate=2, Low=3) or composite fields.
-    // Here, we'll sort by recency and let users filter. Urgency is displayed on cards.
+    setLoading(true);
+    setError(null);
     const q = query(collection(db, "requests"), where("status", "==", "active"), orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -35,8 +34,9 @@ export default function ViewRequestsPage() {
       });      
       setRequests(fetchedRequests);
       setLoading(false);
-    }, (error) => {
-      console.error("Error fetching requests:", error);
+    }, (err) => {
+      console.error("Error fetching requests:", err);
+      setError("Failed to load blood requests. Please try again later.");
       setLoading(false);
     });
 
@@ -48,12 +48,9 @@ export default function ViewRequestsPage() {
       .filter(req => bloodGroupFilter === "all" || req.bloodGroup === bloodGroupFilter)
       .filter(req => locationFilter === "" || req.location.toLowerCase().includes(locationFilter.toLowerCase()))
       .sort((a, b) => {
-        // Urgency sort: Urgent > Moderate > Low
         const urgencyOrder: Record<UrgencyLevel, number> = { Urgent: 1, Moderate: 2, Low: 3 };
         if (urgencyOrder[a.urgency] < urgencyOrder[b.urgency]) return -1;
         if (urgencyOrder[a.urgency] > urgencyOrder[b.urgency]) return 1;
-        // Then by recency (already handled by Firestore query in this basic setup)
-        // For client-side sort consistency if Firestore sort changes:
         return b.createdAt.toMillis() - a.createdAt.toMillis();
       });
   }, [requests, bloodGroupFilter, locationFilter]);
@@ -126,6 +123,12 @@ export default function ViewRequestsPage() {
             </Card>
           ))}
         </div>
+      ) : error ? (
+        <Alert variant="destructive" className="mt-6">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Error Loading Requests</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       ) : filteredRequests.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRequests.map(request => (

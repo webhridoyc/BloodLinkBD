@@ -10,17 +10,21 @@ import { DonorCard } from '@/components/DonorCard';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Users, Search, RotateCcw } from 'lucide-react';
+import { Users, Search, RotateCcw, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function ViewDonorsPage() {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [bloodGroupFilter, setBloodGroupFilter] = useState<BloodGroup | "all">("all");
   const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
     const q = query(collection(db, "donors"), orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -30,8 +34,9 @@ export default function ViewDonorsPage() {
       });
       setDonors(fetchedDonors);
       setLoading(false);
-    }, (error) => {
-      console.error("Error fetching donors:", error);
+    }, (err) => {
+      console.error("Error fetching donors:", err);
+      setError("Failed to load donor information. Please try again later.");
       setLoading(false);
     });
 
@@ -112,6 +117,12 @@ export default function ViewDonorsPage() {
             </Card>
           ))}
         </div>
+      ) : error ? (
+        <Alert variant="destructive" className="mt-6">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Error Loading Donors</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       ) : filteredDonors.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDonors.map(donor => (
