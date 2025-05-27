@@ -14,6 +14,7 @@ import { Users, Search, RotateCcw, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Image from 'next/image'; // Added Image import
 
 export default function ViewDonorsPage() {
   const [donors, setDonors] = useState<Donor[]>([]);
@@ -56,10 +57,22 @@ export default function ViewDonorsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center">
-        <Users className="mx-auto h-12 w-12 text-primary mb-4" />
+      <div className="text-center space-y-4">
+        <Users className="mx-auto h-12 w-12 text-primary" />
         <h1 className="text-3xl md:text-4xl font-bold">Registered Blood Donors</h1>
-        <p className="text-muted-foreground mt-2">Find available donors. Contact them directly if you need blood.</p>
+        <p className="text-muted-foreground">Find available donors. Contact them directly if you need blood.</p>
+      </div>
+
+      <div className="my-8">
+        <Image
+          src="https://placehold.co/1200x400.png"
+          alt="Image depicting blood donation or medical assistance"
+          width={1200}
+          height={400}
+          className="w-full h-auto max-h-[300px] md:max-h-[400px] object-cover rounded-lg shadow-lg"
+          data-ai-hint="medical care blood"
+          priority
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg bg-card shadow">
