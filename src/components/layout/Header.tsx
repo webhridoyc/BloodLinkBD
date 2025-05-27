@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/requests', label: 'View Requests', icon: ListChecks },
@@ -33,6 +34,21 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Call handler right away so state is correct on initial render
+    handleScroll(); 
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const getInitials = (name?: string | null, email?: string | null): string => {
     if (name) return name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
@@ -41,7 +57,10 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
+    <header className={cn(
+      "bg-card border-border sticky top-0 z-50 transition-all duration-300 ease-in-out",
+      scrolled ? "shadow-md border-b" : "shadow-sm"
+    )}>
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
           <HeartHandshake className="h-8 w-8" />
@@ -53,8 +72,8 @@ export default function Header() {
             if (link.protected && !user && !loading) {
               return null;
             }
-            if (link.protected && !user && loading) { 
-              return <div key={link.href} className="h-8 w-24 bg-muted/50 rounded animate-pulse mx-1"></div>; 
+            if (link.protected && !user && loading) {
+              return <div key={link.href} className="h-8 w-24 bg-muted/50 rounded animate-pulse mx-1"></div>;
             }
             return (
             <Button
@@ -118,7 +137,7 @@ export default function Header() {
             <div className="hidden md:flex space-x-2">
               <Button variant="outline" size="sm" asChild>
                 <Link href="/login" className="flex items-center gap-1">
-                  <LogIn className="h-4 w-4" /> Member Login
+                  <LogIn className="h-4 w-4" /> Membership Login
                 </Link>
               </Button>
               <Button size="sm" asChild>
@@ -148,8 +167,11 @@ export default function Header() {
                 </SheetHeader>
                 <nav className="flex flex-col space-y-2">
                   {navLinks.map((link) => {
-                     if (link.protected && !user) {
+                     if (link.protected && !user && !loading) { // Simplified condition
                         return null; 
+                      }
+                      if (link.protected && !user && loading) { // Skeleton for protected links while auth is loading
+                        return <div key={`mobile-skeleton-${link.href}`} className="h-10 w-full bg-muted/50 rounded animate-pulse"></div>;
                       }
                     return (
                     <Button
@@ -167,7 +189,12 @@ export default function Header() {
                   );
                   })}
                   <hr className="my-3 border-border"/>
-                  {user ? (<>
+                  {loading ? (
+                    <>
+                      <div className="h-10 w-full bg-muted/50 rounded animate-pulse"></div>
+                      <div className="h-10 w-full bg-muted/50 rounded animate-pulse mt-2"></div>
+                    </>
+                  ) : user ? (<>
                      <Button 
                         variant={pathname === '/profile' ? "secondary" : "ghost"}
                         className="w-full justify-start text-base py-3" 
@@ -203,7 +230,7 @@ export default function Header() {
                         asChild 
                         onClick={() => setMobileMenuOpen(false)}>
                         <Link href="/login" className="flex items-center gap-3">
-                           <LogIn className="h-5 w-5" />Member Login
+                           <LogIn className="h-5 w-5" />Membership Login
                         </Link>
                       </Button>
                       <Button 
