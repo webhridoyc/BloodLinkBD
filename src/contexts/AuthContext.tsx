@@ -29,28 +29,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       if (firebaseUser) {
         setUser(firebaseUser);
-        const userDocRef = doc(db, "users", firebaseUser.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          const firestoreData = userDocSnap.data();
-          const profileData: UserProfile = {
-            uid: firestoreData.uid,
-            email: firestoreData.email ?? undefined, // Coerce null to undefined
-            displayName: firestoreData.displayName ?? undefined, // Coerce null to undefined
-            role: firestoreData.role,
-          };
-          setUserProfile(profileData);
-          setIsAdmin(profileData.role === 'admin');
-        } else {
-          // Create a basic profile if it doesn't exist
-          const newProfile: UserProfile = {
-            uid: firebaseUser.uid,
-            email: firebaseUser.email ?? undefined, // Coerce null to undefined
-            displayName: firebaseUser.displayName ?? undefined, // Coerce null to undefined
-            role: 'user', // Default role
-          };
-          await setDoc(userDocRef, newProfile);
-          setUserProfile(newProfile);
+        try {
+          const userDocRef = doc(db, "users", firebaseUser.uid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            const firestoreData = userDocSnap.data();
+            const profileData: UserProfile = {
+              uid: firestoreData.uid,
+              email: firestoreData.email ?? undefined,
+              displayName: firestoreData.displayName ?? undefined,
+              role: firestoreData.role,
+            };
+            setUserProfile(profileData);
+            setIsAdmin(profileData.role === 'admin');
+          } else {
+            // Create a basic profile if it doesn't exist
+            const newProfile: UserProfile = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email ?? undefined,
+              displayName: firebaseUser.displayName ?? undefined,
+              role: 'user', // Default role
+            };
+            await setDoc(userDocRef, newProfile);
+            setUserProfile(newProfile);
+            setIsAdmin(false);
+          }
+        } catch (error: any) {
+          console.warn("AuthContext: Failed to fetch or create user profile, possibly offline.", error.message);
+          setUserProfile(null);
           setIsAdmin(false);
         }
       } else {
@@ -65,10 +71,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const logout = async () => {
-    await firebaseSignOut(auth);
-    setUser(null);
-    setUserProfile(null);
-    setIsAdmin(false);
+    try {
+      await firebaseSignOut(auth);
+      // State will be cleared by onAuthStateChanged listener
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Optionally show a toast to the user if logout fails
+    }
   };
 
   return (
