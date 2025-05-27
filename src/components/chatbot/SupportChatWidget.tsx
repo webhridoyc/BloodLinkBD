@@ -57,7 +57,7 @@ export function SupportChatWidget() {
             }
         ]);
     }
-  }, [isOpen]);
+  }, [isOpen, messages.length]);
 
 
   const handleSendMessage = async () => {
@@ -147,7 +147,7 @@ export function SupportChatWidget() {
                         msg.role === 'user' ? 'text-right text-primary-foreground/80' : 'text-left text-muted-foreground/80'
                     )}>
                         {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </PageText>
+                    </p> {/* Corrected tag here */}
                   </div>
                   {msg.role === 'user' && (
                      <Avatar className="h-8 w-8 border">
@@ -201,3 +201,5 @@ export function SupportChatWidget() {
     </>
   );
 }
+
+    

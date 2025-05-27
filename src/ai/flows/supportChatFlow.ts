@@ -9,7 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit/zod';
+import {z} from 'genkit'; // Changed from 'genkit/zod'
 
 export const SupportChatInputSchema = z.object({
   message: z.string().describe('The user\'s message to the chatbot.'),
