@@ -35,7 +35,7 @@ export default function HospitalsPage() {
                 alt={hospital.name}
                 fill
                 style={{ objectFit: 'cover' }}
-                data-ai-hint={hospital.dataAiHint}
+                data-ai-hint={hospital.dataAiHint || "hospital exterior"}
               />
             </div>
             <CardHeader>

@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Activity, Droplets, ListChecks, Users } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Pie, PieChart, Cell, Line, LineChart } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell } from 'recharts'; // Removed Tooltip, Legend, ResponsiveContainer as ChartContainer handles responsiveness
 import type { ChartConfig } from "@/components/ui/chart";
 
 const requestsOverTimeData = [
@@ -36,6 +36,11 @@ const bloodGroupData = [
   { name: 'Others', value: 50, fill: "hsl(var(--muted))" },
 ];
 
+const bloodGroupChartConfig = bloodGroupData.reduce((acc, entry) => {
+  acc[entry.name] = { label: entry.name, color: entry.fill };
+  return acc;
+}, {} as ChartConfig);
+
 
 export default function AdminDashboardPage() {
   return (
@@ -43,7 +48,7 @@ export default function AdminDashboardPage() {
       <h1 className="text-3xl font-bold">Admin Dashboard</h1>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -53,7 +58,7 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-muted-foreground">+20.1% from last month</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Requests</CardTitle>
             <ListChecks className="h-4 w-4 text-muted-foreground" />
@@ -63,7 +68,7 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-muted-foreground">+10 since last hour</p>
           </CardContent>
         </Card>
-         <Card>
+         <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Registered Donors</CardTitle>
             <Droplets className="h-4 w-4 text-muted-foreground" />
@@ -73,7 +78,7 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-muted-foreground">+5 new this week</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-md hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Overall Activity</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
@@ -93,8 +98,8 @@ export default function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={requestsChartConfig} className="min-h-[300px] w-full">
-              <BarChart accessibilityLayer data={requestsOverTimeData}>
-                <CartesianGrid vertical={false} />
+              <BarChart accessibilityLayer data={requestsOverTimeData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid vertical={false} strokeDasharray="3 3"/>
                 <XAxis
                   dataKey="month"
                   tickLine={false}
@@ -102,10 +107,11 @@ export default function AdminDashboardPage() {
                   axisLine={false}
                   tickFormatter={(value) => value.slice(0, 3)}
                 />
+                <YAxis tickLine={false} axisLine={false} />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="mobile" fill="var(--color-mobile)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -116,13 +122,13 @@ export default function AdminDashboardPage() {
             <CardTitle>Blood Group Distribution (Requests)</CardTitle>
             <CardDescription>Distribution of requested blood groups.</CardDescription>
           </CardHeader>
-          <CardContent className="flex items-center justify-center">
-             <ChartContainer config={{}} className="mx-auto aspect-square min-h-[300px] max-h-[400px]">
+          <CardContent className="flex items-center justify-center p-0 aspect-square">
+             <ChartContainer config={bloodGroupChartConfig} className="mx-auto w-full h-full min-h-[300px]">
               <PieChart>
                 <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
                 <Pie data={bloodGroupData} dataKey="value" nameKey="name" labelLine={false} label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
-                  {bloodGroupData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  {bloodGroupData.map((entry) => (
+                    <Cell key={`cell-${entry.name}`} fill={entry.fill} />
                   ))}
                 </Pie>
                 <ChartLegend content={<ChartLegendContent nameKey="name"/>} />

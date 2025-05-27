@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Droplet, Users, Search, HeartHandshake, UserPlus, PlusCircle } from 'lucide-react'; // Corrected: UserPlus, PlusCircle were missing
+import { Droplet, Users, Search, HeartHandshake, UserPlus, PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -28,7 +28,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/*
       <section className="grid md:grid-cols-3 gap-8">
         <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
           <CardHeader>
@@ -125,15 +124,14 @@ export default function HomePage() {
           </p>
           <Image 
             src="https://placehold.co/800x400.png" 
-            alt="Blood donation awareness" 
+            alt="Blood donation awareness campaign with diverse people" 
             width={800} 
             height={400} 
             className="rounded-lg mx-auto shadow-xl"
             style={{ objectFit: 'cover' }}
-            data-ai-hint="blood donation awareness"
+            data-ai-hint="blood donation campaign"
           />
       </section>
-      */}
     </div>
   );
 }
