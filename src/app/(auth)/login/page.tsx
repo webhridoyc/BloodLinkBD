@@ -62,8 +62,8 @@ export default function LoginPage() {
           <div className="mx-auto bg-primary/20 p-3 rounded-full w-fit mb-3">
             <LogIn className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-3xl">Login to BloodLink BD</CardTitle>
-          <CardDescription>Enter your credentials to access your account.</CardDescription>
+          <CardTitle className="text-3xl">Member Login</CardTitle>
+          <CardDescription>Enter your member credentials to access your account.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -109,9 +109,9 @@ export default function LoginPage() {
             <Button variant="link" className="text-sm p-0 h-auto">Forgot password?</Button>
           </Link>
           <p className="text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
+            Not a member yet?{' '}
             <Link href="/signup">
-              <Button variant="link" className="p-0 h-auto">Sign up</Button>
+              <Button variant="link" className="p-0 h-auto">Join Us</Button>
             </Link>
           </p>
         </CardFooter>

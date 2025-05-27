@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { HeartHandshake, LogIn, LogOut, User, UserPlus, Search, HospitalIcon, Phone, ListChecks, Users, PlusCircle, Settings } from 'lucide-react';
+import { HeartHandshake, LogIn, LogOut, User, UserPlus, Search, HospitalIcon, Phone, ListChecks, Users, PlusCircle, Settings, MenuIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePathname, useRouter } from 'next/navigation';
@@ -15,8 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// Removed Sheet, SheetContent, SheetTrigger, MenuIcon imports
-// Removed useState import
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useState } from 'react';
 
 const navLinks = [
   { href: '/requests', label: 'View Requests', icon: ListChecks },
@@ -32,11 +32,12 @@ export default function Header() {
   const { user, userProfile, logout, loading, isAdmin } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  // Removed mobileMenuOpen state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const getInitials = (name?: string | null) => {
-    if (!name) return 'U';
-    return name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+  const getInitials = (name?: string | null, email?: string | null) => {
+    if (name) return name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+    if (email) return email[0].toUpperCase();
+    return 'U';
   };
 
   return (
@@ -49,11 +50,11 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center space-x-2 lg:space-x-4">
           {navLinks.map((link) => {
-            if (link.protected && !user && loading) {
+            if (link.protected && !user && !loading) { // Show nothing if protected, not logged in, and not loading
               return null;
             }
-            if (link.protected && !user && !loading) {
-              return null;
+            if (link.protected && !user && loading) { // Optionally show a placeholder or nothing during auth loading
+              return <div key={link.href} className="h-8 w-24 bg-muted/50 rounded animate-pulse"></div>; 
             }
             return (
             <Button
@@ -73,14 +74,14 @@ export default function Header() {
 
         <div className="flex items-center gap-2">
           {loading ? (
-             <div className="h-8 w-20 bg-muted rounded animate-pulse"></div>
+             <div className="h-10 w-20 bg-muted rounded animate-pulse"></div>
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user.photoURL || undefined} alt={userProfile?.displayName || user.email || 'User'} />
-                    <AvatarFallback>{getInitials(userProfile?.displayName || user.email)}</AvatarFallback>
+                    <AvatarFallback>{getInitials(userProfile?.displayName, user.email)}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -114,21 +115,112 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="hidden md:flex space-x-2"> {/* Hide login/signup on small screens if mobile menu is removed */}
+            <div className="hidden md:flex space-x-2">
               <Button variant="outline" size="sm" asChild>
                 <Link href="/login" className="flex items-center gap-1">
-                  <LogIn className="h-4 w-4" /> Login
+                  <LogIn className="h-4 w-4" /> Member Login
                 </Link>
               </Button>
               <Button size="sm" asChild>
                 <Link href="/signup" className="flex items-center gap-1">
-                  <UserPlus className="h-4 w-4" /> Sign Up
+                  <UserPlus className="h-4 w-4" /> Join Us
                 </Link>
               </Button>
             </div>
           )}
           
-           {/* Mobile menu section removed */}
+          <div className="md:hidden">
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MenuIcon className="h-6 w-6" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full max-w-xs">
+                <SheetHeader className="mb-6">
+                  <SheetTitle>
+                     <Link href="/" className="flex items-center gap-2 text-primary" onClick={() => setMobileMenuOpen(false)}>
+                        <HeartHandshake className="h-7 w-7" />
+                        <span className="text-lg font-bold">BloodLink BD</span>
+                    </Link>
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col space-y-3">
+                  {navLinks.map((link) => {
+                     if (link.protected && !user) {
+                        return null; // Don't show protected links if not logged in
+                      }
+                    return (
+                    <Button
+                      key={link.href}
+                      variant={pathname === link.href ? "secondary" : "ghost"}
+                      className="justify-start text-base"
+                      asChild
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Link href={link.href} className="flex items-center gap-2">
+                        <link.icon className="h-5 w-5" />
+                        {link.label}
+                      </Link>
+                    </Button>
+                  );
+                  })}
+                  <hr className="my-3"/>
+                  {user ? (<>
+                    {isAdmin && (
+                       <Button 
+                        variant={pathname.startsWith('/admin') ? "secondary" : "ghost"}
+                        className="justify-start text-base" 
+                        asChild 
+                        onClick={() => setMobileMenuOpen(false)}>
+                        <Link href="/admin/dashboard" className="flex items-center gap-2">
+                          <Settings className="h-5 w-5" />Admin Panel
+                        </Link>
+                      </Button>
+                    )}
+                     <Button 
+                        variant={pathname === '/profile' ? "secondary" : "ghost"}
+                        className="justify-start text-base" 
+                        asChild 
+                        onClick={() => setMobileMenuOpen(false)}>
+                        <Link href="/profile" className="flex items-center gap-2">
+                           <User className="h-5 w-5" />Profile
+                        </Link>
+                      </Button>
+                    <Button 
+                        variant="ghost" 
+                        className="justify-start text-base text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => { logout(); setMobileMenuOpen(false); }}>
+                         <LogOut className="mr-2 h-5 w-5" />
+                         Log out
+                    </Button>
+                  </>) : (
+                    <>
+                      <Button 
+                        variant={pathname === '/login' ? "secondary" : "ghost"}
+                        className="justify-start text-base" 
+                        asChild 
+                        onClick={() => setMobileMenuOpen(false)}>
+                        <Link href="/login" className="flex items-center gap-2">
+                           <LogIn className="h-5 w-5" />Member Login
+                        </Link>
+                      </Button>
+                      <Button 
+                        variant={pathname === '/signup' ? "secondary" : "default"}
+                        className="justify-start text-base" 
+                        asChild 
+                        onClick={() => setMobileMenuOpen(false)}>
+                         <Link href="/signup" className="flex items-center gap-2">
+                          <UserPlus className="h-5 w-5" />Join Us
+                        </Link>
+                      </Button>
+                    </>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

@@ -23,6 +23,7 @@ const signupSchema = z.object({
   displayName: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  // Add more fields here for membership details later
 });
 
 type SignupFormInputs = z.infer<typeof signupSchema>;
@@ -54,9 +55,10 @@ export default function SignupPage() {
       const userDocRef = doc(db, "users", userCredential.user.uid);
       const newUserProfile: UserProfile = {
         uid: userCredential.user.uid,
-        email: userCredential.user.email ?? undefined, // Coerce null to undefined
-        displayName: data.displayName, // This comes from the form, is a string
+        email: userCredential.user.email ?? undefined,
+        displayName: data.displayName ?? undefined,
         role: 'user', // Default role
+        // Add new membership details to this object later
       };
       await setDoc(userDocRef, newUserProfile);
       
@@ -77,8 +79,8 @@ export default function SignupPage() {
            <div className="mx-auto bg-primary/20 p-3 rounded-full w-fit mb-3">
             <UserPlus className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-3xl">Create an Account</CardTitle>
-          <CardDescription>Join BloodLink BD to save lives and find help.</CardDescription>
+          <CardTitle className="text-3xl">Membership Signup</CardTitle>
+          <CardDescription>Fill in your details to join our BloodLink BD membership.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -121,20 +123,21 @@ export default function SignupPage() {
               />
               {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
             </div>
+            {/* More form fields for membership details will be added here */}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
               ) : (
-                "Sign Up"
+                "Complete Membership Signup"
               )}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{' '}
+            Already a member?{' '}
             <Link href="/login">
-              <Button variant="link" className="p-0 h-auto">Login</Button>
+              <Button variant="link" className="p-0 h-auto">Member Login</Button>
             </Link>
           </p>
         </CardFooter>
