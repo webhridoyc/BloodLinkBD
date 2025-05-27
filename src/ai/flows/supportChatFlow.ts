@@ -3,9 +3,9 @@
 /**
  * @fileOverview A support chatbot flow for BloodLink BD.
  *
- * - getSupportResponse - A function that handles the chatbot interaction.
- * - SupportChatInput - The input type for the getSupportResponse function.
- * - SupportChatOutput - The return type for the getSupportResponse function.
+ * - getSupportChatResponse - A function that handles the chatbot interaction.
+ * - SupportChatInput - The input type for the getSupportChatResponse function.
+ * - SupportChatOutput - The return type for the getSupportChatResponse function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -68,7 +68,7 @@ const supportChatFlow = ai.defineFlow(
   },
   async (input) => {
     const llmResponse = await supportChatPrompt(input); // Pass the whole input object
-    const output = llmResponse.output();
+    const output = llmResponse.output; // Corrected: .output instead of .output() for Genkit 1.x
     if (!output) {
       // Fallback response if the LLM fails to generate structured output
       return { response: "I'm sorry, I couldn't process that request. Could you try rephrasing?" };
@@ -76,3 +76,4 @@ const supportChatFlow = ai.defineFlow(
     return output;
   }
 );
+
