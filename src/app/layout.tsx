@@ -6,6 +6,7 @@ import { Providers } from '@/components/Providers';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { cn } from '@/lib/utils';
+import { SupportChatWidget } from '@/components/chatbot/SupportChatWidget'; // Added import
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -43,6 +44,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <SupportChatWidget /> {/* Added Chat Widget */}
         </Providers>
       </body>
     </html>
