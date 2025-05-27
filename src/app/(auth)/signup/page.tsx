@@ -12,18 +12,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { UserPlus } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { UserProfile } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 
 const signupSchema = z.object({
   displayName: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  // Add more fields here for membership details later
 });
 
 type SignupFormInputs = z.infer<typeof signupSchema>;
@@ -31,6 +31,7 @@ type SignupFormInputs = z.infer<typeof signupSchema>;
 export default function SignupPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -58,13 +59,26 @@ export default function SignupPage() {
         email: userCredential.user.email ?? undefined,
         displayName: data.displayName ?? undefined,
         role: 'user', // Default role
-        // Add new membership details to this object later
       };
       await setDoc(userDocRef, newUserProfile);
+
+      // Send email verification
+      await sendEmailVerification(userCredential.user);
       
-      router.push('/'); // Redirect to home or profile after signup
+      toast({
+        title: "Membership Signup Successful!",
+        description: "Your account has been created. Please check your email to verify your account before logging in.",
+        duration: 7000, // Keep toast longer for this important message
+      });
+      
+      router.push('/login'); // Redirect to login after signup
     } catch (err: any) {
       setError(err.message || "Failed to sign up. Please try again.");
+      toast({
+        title: "Signup Failed",
+        description: err.message || "Failed to sign up. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -123,7 +137,6 @@ export default function SignupPage() {
               />
               {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
             </div>
-            {/* More form fields for membership details will be added here */}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
@@ -145,3 +158,4 @@ export default function SignupPage() {
     </div>
   );
 }
+
