@@ -9,9 +9,9 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit'; // Changed from 'genkit/zod'
+import {z} from 'genkit';
 
-export const SupportChatInputSchema = z.object({
+const SupportChatInputSchema = z.object({
   message: z.string().describe('The user\'s message to the chatbot.'),
   // history: z.array(z.object({
   //   role: z.enum(['user', 'model']),
@@ -20,7 +20,7 @@ export const SupportChatInputSchema = z.object({
 });
 export type SupportChatInput = z.infer<typeof SupportChatInputSchema>;
 
-export const SupportChatOutputSchema = z.object({
+const SupportChatOutputSchema = z.object({
   response: z.string().describe('The chatbot\'s response.'),
 });
 export type SupportChatOutput = z.infer<typeof SupportChatOutputSchema>;
