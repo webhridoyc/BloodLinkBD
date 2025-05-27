@@ -29,7 +29,7 @@ export default function HomePage() {
       </section>
 
       <section className="grid md:grid-cols-3 gap-8">
-        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <Card className="shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Droplet className="h-10 w-10 text-primary" />
@@ -46,7 +46,7 @@ export default function HomePage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <Card className="shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Users className="h-10 w-10 text-primary" />
@@ -63,7 +63,7 @@ export default function HomePage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <Card className="shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
           <CardHeader>
             <div className="flex items-center gap-3">
               <Search className="h-10 w-10 text-primary" />
@@ -85,28 +85,28 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div className="p-6 bg-card rounded-lg shadow-md">
+            <div className="p-6 bg-card rounded-lg shadow-md hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
               <div className="p-3 bg-primary/20 rounded-full inline-block mb-3">
                 <UserPlus className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">1. Register</h3>
               <p className="text-muted-foreground text-sm">Users sign up and donors provide their details.</p>
             </div>
-            <div className="p-6 bg-card rounded-lg shadow-md">
+            <div className="p-6 bg-card rounded-lg shadow-md hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
                <div className="p-3 bg-primary/20 rounded-full inline-block mb-3">
                 <PlusCircle className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">2. Post/View Requests</h3>
               <p className="text-muted-foreground text-sm">Post a blood need or browse existing requests.</p>
             </div>
-            <div className="p-6 bg-card rounded-lg shadow-md">
+            <div className="p-6 bg-card rounded-lg shadow-md hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
                <div className="p-3 bg-primary/20 rounded-full inline-block mb-3">
                 <Search className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">3. Get Matched</h3>
               <p className="text-muted-foreground text-sm">Our AI assists in finding suitable donor matches.</p>
             </div>
-            <div className="p-6 bg-card rounded-lg shadow-md">
+            <div className="p-6 bg-card rounded-lg shadow-md hover:shadow-xl hover:scale-105 transform transition-all duration-300 ease-in-out">
                <div className="p-3 bg-primary/20 rounded-full inline-block mb-3">
                 <HeartHandshake className="h-8 w-8 text-primary" />
               </div>
@@ -130,6 +130,7 @@ export default function HomePage() {
             className="rounded-lg mx-auto shadow-xl"
             style={{ objectFit: 'cover' }}
             data-ai-hint="blood donation campaign"
+            priority
           />
       </section>
     </div>

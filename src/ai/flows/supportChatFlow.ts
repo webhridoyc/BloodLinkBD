@@ -54,9 +54,15 @@ Key features of BloodLink BD that you can talk about:
 
 Based on the user's message: {{{message}}}
 
-Provide a concise, helpful, and polite answer related to these features.
+Generate a response for the chatbot. Your response should be helpful, concise, and polite, related to the features of BloodLink BD.
 If the question is vague, you can ask for clarification.
 Keep your responses focused on assisting the user with the BloodLink BD platform.
+
+Format your output as a JSON object that adheres to the following Zod schema:
+{
+  "response": "string" // This field should contain the chatbot's textual answer.
+}
+Only provide the JSON object as your response.
 `,
 });
 
@@ -67,8 +73,8 @@ const supportChatFlow = ai.defineFlow(
     outputSchema: SupportChatOutputSchema,
   },
   async (input) => {
-    const llmResponse = await supportChatPrompt(input); // Pass the whole input object
-    const output = llmResponse.output; // Corrected: .output instead of .output() for Genkit 1.x
+    const llmResponse = await supportChatPrompt(input);
+    const output = llmResponse.output;
     if (!output) {
       // Fallback response if the LLM fails to generate structured output
       return { response: "I'm sorry, I couldn't process that request. Could you try rephrasing?" };
