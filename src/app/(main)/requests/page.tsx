@@ -14,7 +14,7 @@ import { ListChecks, Search, RotateCcw, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Image from 'next/image'; // Added Image import
+import Image from 'next/image';
 
 export default function ViewRequestsPage() {
   const [requests, setRequests] = useState<BloodRequest[]>([]);
@@ -71,12 +71,12 @@ export default function ViewRequestsPage() {
 
       <div className="my-8">
         <Image
-          src="https://placehold.co/1200x400.png"
-          alt="Image representing community support or medical aid"
-          width={1200}
-          height={400}
-          className="w-full h-auto max-h-[300px] md:max-h-[400px] object-cover rounded-lg shadow-lg"
-          data-ai-hint="community support medical"
+          src="https://placehold.co/1000x300.png"
+          alt="Image representing urgent need for blood requests"
+          width={1000}
+          height={300}
+          className="w-full h-auto max-h-[250px] md:max-h-[300px] object-cover rounded-lg shadow-lg"
+          data-ai-hint="urgent help"
           priority
         />
       </div>
