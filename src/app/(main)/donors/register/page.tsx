@@ -7,12 +7,13 @@ import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DonorRegistrationForm, type DonorFormInputs } from '@/components/DonorRegistrationForm';
 import { db, messaging } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc, FieldValue } from 'firebase/firestore'; // Added FieldValue
+import { collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc, FieldValue } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { UserPlus, Droplet, HeartHandshake, MapPin } from 'lucide-react';
 import type { Donor, BloodGroup } from '@/types';
 import { getToken } from "firebase/messaging";
 import Image from 'next/image';
+import { Button } from '@/components/ui/button'; // Added Button import
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "YOUR_VAPID_KEY_HERE_IF_ANY"; // Ensure this is configured
 
@@ -93,7 +94,7 @@ export default function RegisterDonorPage() {
     }
     setIsSubmitting(true);
     
-    const fcmTokenValue = await requestNotificationPermissionAndGetToken(); // string | null
+    const fcmTokenValue = await requestNotificationPermissionAndGetToken();
 
     try {
       if (existingDonor && existingDonor.id) {
@@ -105,45 +106,46 @@ export default function RegisterDonorPage() {
           bloodGroup: data.bloodGroup as BloodGroup,
           location: data.location,
           contactNumber: data.contactNumber,
-          // Do not update 'available' or 'createdAt' here unless specifically intended
         };
 
         if (fcmTokenValue && typeof fcmTokenValue === 'string' && fcmTokenValue.length > 0) {
           donorUpdatePayload.fcmToken = fcmTokenValue;
-        } else if (fcmTokenValue === null) {
-          // If permission was denied or token couldn't be retrieved, and we want to remove existing token
-          // donorUpdatePayload.fcmToken = FieldValue.delete() as any; // Uncomment if you want to delete
-          // For now, if fcmTokenValue is null, we will not update the fcmToken field,
-          // meaning the existing token in Firestore (if any) will remain.
-          // If you want to set it to null (Firestore allows null), you can do:
-          // donorUpdatePayload.fcmToken = null;
-          // But our Donor type is fcmToken?: string (string | undefined), so omitting or FieldValue.delete() is better.
+        } else if (fcmTokenValue === null && existingDonor.fcmToken) {
+           // If permission was denied or token couldn't be retrieved, and we want to remove existing token
+           // Using FieldValue.delete() requires more careful typing, for now, let's set to undefined
+           // which means Firestore will remove the field if merge is false, or keep it if merge is true
+           // For explicit removal, one might need to handle this with FieldValue.delete()
+           // but ensuring the type is compatible with Partial<Donor>
+           donorUpdatePayload.fcmToken = undefined; // Or handle with FieldValue.delete() more carefully
         }
-        // Only update fcmToken if a new one is explicitly provided or if explicitly removing.
-        // If fcmTokenValue is undefined (e.g. error in getToken not returning null), we do nothing.
+        // If fcmTokenValue is null and there was no existing token, we do nothing to fcmToken in payload
 
         await updateDoc(donorDocRef, donorUpdatePayload);
         toast({ title: "Success!", description: "Your donor profile has been updated." });
       } else {
         // Add new donor document
-        const baseDonorData = {
+        
+        type NewDonorFirestoreData = Omit<Donor, 'id' | 'createdAt' | 'fcmToken'> & { 
+          createdAt: FieldValue;
+          fcmToken?: string; 
+        };
+
+        const donorDataForFirestore: NewDonorFirestoreData = {
           fullName: data.fullName,
           bloodGroup: data.bloodGroup as BloodGroup,
           location: data.location,
           contactNumber: data.contactNumber,
           userId: user.uid,
-          available: true, // Default to available
+          available: true, 
           createdAt: serverTimestamp(),
         };
 
-        let finalDataForFirestore: any = { ...baseDonorData }; 
-
         if (fcmTokenValue && typeof fcmTokenValue === 'string' && fcmTokenValue.length > 0) {
-          finalDataForFirestore.fcmToken = fcmTokenValue;
+          donorDataForFirestore.fcmToken = fcmTokenValue;
         }
-        // If fcmTokenValue is null or an empty string, the fcmToken property will not be added to finalDataForFirestore
+        // If fcmTokenValue is null or empty, the fcmToken property will not be added to donorDataForFirestore
 
-        await addDoc(collection(db, "donors"), finalDataForFirestore);
+        await addDoc(collection(db, "donors"), donorDataForFirestore);
         toast({ title: "Success!", description: "You have been registered as a donor." });
       }
       router.push('/donors'); // Redirect to donors list
@@ -169,7 +171,7 @@ export default function RegisterDonorPage() {
     <div className="relative min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Background Image */}
       <Image
-        src="https://placehold.co/1200x800.png" // Replace with a relevant, high-quality image
+        src="https://placehold.co/1200x800.png" 
         alt="Hopeful scene related to community or health"
         fill
         style={{ objectFit: 'cover' }}
@@ -197,8 +199,6 @@ export default function RegisterDonorPage() {
                 size="lg" 
                 className="border-2 border-white text-white hover:bg-white hover:text-destructive text-lg px-8 py-6"
                 onClick={() => {
-                    // Smooth scroll to form or simply highlight it.
-                    // For now, just a placeholder action.
                     const formElement = document.getElementById('donor-registration-form');
                     formElement?.scrollIntoView({ behavior: 'smooth' });
                 }}
