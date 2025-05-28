@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Activity, Droplets, ListChecks, Users } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell } from 'recharts'; // Removed Tooltip, Legend, ResponsiveContainer as ChartContainer handles responsiveness
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Pie, PieChart, Cell } from 'recharts';
 import type { ChartConfig } from "@/components/ui/chart";
 
 const requestsOverTimeData = [
@@ -127,8 +127,8 @@ export default function AdminDashboardPage() {
               <PieChart>
                 <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />
                 <Pie data={bloodGroupData} dataKey="value" nameKey="name" labelLine={false} label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}>
-                  {bloodGroupData.map((entry) => (
-                    <Cell key={`cell-${entry.name}`} fill={entry.fill} />
+                  {bloodGroupData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
                 <ChartLegend content={<ChartLegendContent nameKey="name"/>} />
