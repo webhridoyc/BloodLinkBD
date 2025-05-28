@@ -127,7 +127,7 @@ export default function HomePage() {
             Your decision to donate blood can save a life, or even several if your blood is separated into its components. Be a hero today.
           </p>
           <Image 
-            src="https://placehold.co/800x400.png" 
+            src="https://i.ibb.co/nMYWMXBW/fotor-ai-20250528121737.jpg" 
             alt="Blood donation awareness campaign with diverse people" 
             width={800} 
             height={400} 

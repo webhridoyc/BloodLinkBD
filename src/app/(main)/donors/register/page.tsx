@@ -6,16 +6,15 @@ import { useRouter } from 'next/navigation';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DonorRegistrationForm, type DonorFormInputs } from '@/components/DonorRegistrationForm';
-import { db, messaging } from '@/lib/firebase'; // Assuming messaging is exported from firebase.ts
-import { collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { db, messaging } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc, FieldValue } from 'firebase/firestore'; // Added FieldValue
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus } from 'lucide-react';
-import type { Donor, BloodGroup } from '@/types'; // Ensure BloodGroup is imported
-import { getToken, onMessage } from "firebase/messaging";
+import { UserPlus, Droplet, HeartHandshake, MapPin } from 'lucide-react';
+import type { Donor, BloodGroup } from '@/types';
+import { getToken } from "firebase/messaging";
+import Image from 'next/image';
 
-// Ensure VAPID key is set up in your Firebase project for web push notifications
-const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "YOUR_VAPID_KEY_HERE_IF_ANY";
-
+const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "YOUR_VAPID_KEY_HERE_IF_ANY"; // Ensure this is configured
 
 async function requestNotificationPermissionAndGetToken(): Promise<string | null> {
   if (typeof window !== 'undefined' && 'Notification' in window && messaging) {
@@ -43,7 +42,6 @@ async function requestNotificationPermissionAndGetToken(): Promise<string | null
   return null;
 }
 
-
 export default function RegisterDonorPage() {
   const { user, loading: authLoading } = useProtectedRoute();
   const router = useRouter();
@@ -51,6 +49,10 @@ export default function RegisterDonorPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingDonor, setExistingDonor] = useState<Donor | null>(null);
   const [checkingDonorStatus, setCheckingDonorStatus] = useState(true);
+
+  const [titleAnimation, setTitleAnimation] = useState('opacity-0 translate-y-5');
+  const [textAnimation, setTextAnimation] = useState('opacity-0 translate-y-5');
+  const [buttonAnimation, setButtonAnimation] = useState('opacity-0 scale-90');
 
   useEffect(() => {
     const checkExistingDonor = async () => {
@@ -65,10 +67,24 @@ export default function RegisterDonorPage() {
         setCheckingDonorStatus(false);
       }
     };
-    if (!authLoading) {
+    if (!authLoading && user) { // Ensure user object is available before checking
       checkExistingDonor();
+    } else if (!authLoading && !user) { // If auth is done and no user, no need to check
+        setCheckingDonorStatus(false);
     }
   }, [user, authLoading]);
+
+  useEffect(() => {
+    // Trigger animations after mount
+    const timer1 = setTimeout(() => setTitleAnimation('opacity-100 translate-y-0'), 100);
+    const timer2 = setTimeout(() => setTextAnimation('opacity-100 translate-y-0'), 300);
+    const timer3 = setTimeout(() => setButtonAnimation('opacity-100 scale-100'), 500);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, []);
 
   const handleSubmit = async (data: DonorFormInputs) => {
     if (!user) {
@@ -77,74 +93,164 @@ export default function RegisterDonorPage() {
     }
     setIsSubmitting(true);
     
-    const fcmToken = await requestNotificationPermissionAndGetToken();
+    const fcmTokenValue = await requestNotificationPermissionAndGetToken(); // string | null
 
     try {
       if (existingDonor && existingDonor.id) {
         // Update existing donor document
         const donorDocRef = doc(db, "donors", existingDonor.id);
-        const donorUpdateData = {
+        
+        const donorUpdatePayload: Partial<Donor> = {
           fullName: data.fullName,
-          bloodGroup: data.bloodGroup as BloodGroup, // Explicitly cast to BloodGroup
+          bloodGroup: data.bloodGroup as BloodGroup,
           location: data.location,
           contactNumber: data.contactNumber,
-          // Use new fcmToken if available, otherwise keep existing, otherwise undefined
-          fcmToken: fcmToken || existingDonor.fcmToken || undefined, 
+          // Do not update 'available' or 'createdAt' here unless specifically intended
         };
-        await updateDoc(donorDocRef, donorUpdateData);
+
+        if (fcmTokenValue && typeof fcmTokenValue === 'string' && fcmTokenValue.length > 0) {
+          donorUpdatePayload.fcmToken = fcmTokenValue;
+        } else if (fcmTokenValue === null) {
+          // If permission was denied or token couldn't be retrieved, and we want to remove existing token
+          // donorUpdatePayload.fcmToken = FieldValue.delete() as any; // Uncomment if you want to delete
+          // For now, if fcmTokenValue is null, we will not update the fcmToken field,
+          // meaning the existing token in Firestore (if any) will remain.
+          // If you want to set it to null (Firestore allows null), you can do:
+          // donorUpdatePayload.fcmToken = null;
+          // But our Donor type is fcmToken?: string (string | undefined), so omitting or FieldValue.delete() is better.
+        }
+        // Only update fcmToken if a new one is explicitly provided or if explicitly removing.
+        // If fcmTokenValue is undefined (e.g. error in getToken not returning null), we do nothing.
+
+        await updateDoc(donorDocRef, donorUpdatePayload);
         toast({ title: "Success!", description: "Your donor profile has been updated." });
       } else {
         // Add new donor document
-        const newDonorData: Omit<Donor, 'id' | 'createdAt'> & { createdAt: any } = {
+        const baseDonorData = {
           fullName: data.fullName,
-          bloodGroup: data.bloodGroup as BloodGroup, // Explicitly cast to BloodGroup
+          bloodGroup: data.bloodGroup as BloodGroup,
           location: data.location,
           contactNumber: data.contactNumber,
           userId: user.uid,
-          fcmToken: fcmToken || undefined, // Ensures undefined if fcmToken is null
           available: true, // Default to available
           createdAt: serverTimestamp(),
         };
-        await addDoc(collection(db, "donors"), newDonorData);
+
+        let finalDataForFirestore: any = { ...baseDonorData }; 
+
+        if (fcmTokenValue && typeof fcmTokenValue === 'string' && fcmTokenValue.length > 0) {
+          finalDataForFirestore.fcmToken = fcmTokenValue;
+        }
+        // If fcmTokenValue is null or an empty string, the fcmToken property will not be added to finalDataForFirestore
+
+        await addDoc(collection(db, "donors"), finalDataForFirestore);
         toast({ title: "Success!", description: "You have been registered as a donor." });
       }
       router.push('/donors'); // Redirect to donors list
     } catch (error) {
-      console.error("Error registering donor:", error);
-      toast({ title: "Error", description: "Failed to register. Please try again.", variant: "destructive" });
+      console.error("Error registering/updating donor:", error);
+      toast({ title: "Error", description: "Failed to save donor profile. Please try again.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (authLoading || checkingDonorStatus) {
-    return <div className="text-center py-10">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   }
   
   if(!user && !authLoading) return null; // Protected route handles redirect
 
   return (
-    <div className="max-w-2xl mx-auto py-8">
-      <Card className="shadow-xl">
-        <CardHeader className="text-center">
-          <div className="mx-auto bg-primary/20 p-3 rounded-full w-fit mb-3">
-            <UserPlus className="h-10 w-10 text-primary" />
+    <div className="relative min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Background Image */}
+      <Image
+        src="https://placehold.co/1200x800.png" // Replace with a relevant, high-quality image
+        alt="Hopeful scene related to community or health"
+        fill
+        style={{ objectFit: 'cover' }}
+        className="absolute inset-0 z-0 opacity-30"
+        data-ai-hint="community health support"
+        priority
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 z-10 bg-black/30"></div>
+
+      {/* Content */}
+      <div className="relative z-20 container mx-auto px-4 py-12 md:py-20 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+        {/* Left Column: Promotional Text */}
+        <div className="text-center md:text-left space-y-6 text-white">
+          <h1 className={`text-4xl md:text-6xl font-extrabold tracking-tight transition-all duration-700 ease-out ${titleAnimation}`}>
+            <Droplet className="inline-block h-10 w-10 md:h-14 md:h-14 mb-2 text-red-400" /> BECOME A
+            <span className="block text-red-400">BLOOD DONOR</span>
+          </h1>
+          <p className={`text-lg md:text-xl text-gray-200 transition-all duration-700 ease-out delay-200 ${textAnimation}`}>
+            Your decision to donate blood can save lives. Join our community of heroes today and make a tangible difference. Every drop counts.
+          </p>
+          <div className={`pt-4 transition-all duration-700 ease-out delay-300 ${buttonAnimation}`}>
+             <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-2 border-white text-white hover:bg-white hover:text-destructive text-lg px-8 py-6"
+                onClick={() => {
+                    // Smooth scroll to form or simply highlight it.
+                    // For now, just a placeholder action.
+                    const formElement = document.getElementById('donor-registration-form');
+                    formElement?.scrollIntoView({ behavior: 'smooth' });
+                }}
+            >
+                <UserPlus className="mr-2 h-5 w-5" /> Register as a Donor
+            </Button>
           </div>
-          <CardTitle className="text-3xl">{existingDonor ? "Update Donor Profile" : "Register as a Blood Donor"}</CardTitle>
-          <CardDescription>
-            {existingDonor 
-              ? "Update your information to help us connect you with those in need."
-              : "Join our community of heroes. Your contribution can save a life."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DonorRegistrationForm 
-            onSubmit={handleSubmit} 
-            isLoading={isSubmitting}
-            defaultValues={existingDonor || {}}
-          />
-        </CardContent>
-      </Card>
+          <div className={`flex items-center justify-center md:justify-start space-x-4 pt-6 transition-all duration-700 ease-out delay-500 ${textAnimation}`}>
+            <div className="flex items-center">
+              <HeartHandshake className="h-6 w-6 mr-2 text-red-400" />
+              <span className="font-medium">Save Lives</span>
+            </div>
+            <div className="flex items-center">
+              <MapPin className="h-6 w-6 mr-2 text-red-400" />
+              <span className="font-medium">Local Impact</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Registration Form */}
+        <div id="donor-registration-form" className="w-full">
+          <Card className="shadow-2xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+            <CardHeader className="text-center">
+              <div className="mx-auto bg-primary/10 dark:bg-primary/20 p-3 rounded-full w-fit mb-3">
+                <UserPlus className="h-8 w-8 text-primary" />
+              </div>
+              <CardTitle className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100">
+                {existingDonor ? "Update Your Donor Profile" : "Donor Registration"}
+              </CardTitle>
+              <CardDescription className="text-gray-600 dark:text-gray-300">
+                {existingDonor 
+                  ? "Keep your information current to help those in need." 
+                  : "Fill in your details to join our life-saving community."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DonorRegistrationForm
+                onSubmit={handleSubmit}
+                isLoading={isSubmitting}
+                defaultValues={existingDonor ? {
+                    fullName: existingDonor.fullName,
+                    bloodGroup: existingDonor.bloodGroup,
+                    location: existingDonor.location,
+                    contactNumber: existingDonor.contactNumber,
+                } : {}}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
+
+    

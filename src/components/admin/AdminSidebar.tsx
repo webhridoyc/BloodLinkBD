@@ -2,7 +2,6 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Home, ListChecks, Users, Send, Settings, HeartHandshake } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';

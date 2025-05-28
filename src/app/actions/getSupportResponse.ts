@@ -7,7 +7,7 @@ export async function getSupportResponseAction(input: SupportChatInput): Promise
   try {
     const result = await getSupportChatResponseFlow(input);
     return result;
-  } catch (error) { // Added missing opening brace
+  } catch (error) {
     console.error('Error in getSupportResponseAction:', error);
     // Return a generic error message to the client
     return { response: "I'm sorry, something went wrong on my end. Please try again later." };

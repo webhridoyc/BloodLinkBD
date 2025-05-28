@@ -37,7 +37,7 @@ export default function ViewRequestsPage() {
       setLoading(false);
     }, (err) => {
       console.error("Error fetching requests:", err);
-      setError("Failed to load blood requests. Please try again later.");
+      setError("Failed to load active blood requests. Please try again later.");
       setLoading(false);
     });
 
@@ -61,27 +61,24 @@ export default function ViewRequestsPage() {
     setLocationFilter("");
   }
 
-  return (
-    <div className="space-y-8">
-      <div className="text-center space-y-4">
-        <ListChecks className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="text-3xl md:text-4xl font-bold">Active Blood Requests</h1>
-        <p className="text-muted-foreground">Find blood requests based on your criteria.</p>
-      </div>
-
-      <div className="my-8">
-        <Image
-          src="https://placehold.co/1000x300.png"
-          alt="Image representing urgent need for blood requests"
-          width={1000}
-          height={300}
-          className="w-full h-auto max-h-[250px] md:max-h-[300px] object-cover rounded-lg shadow-lg"
-          data-ai-hint="urgent help"
-          priority
-        />
-      </div>
-
+ return (    
+    <div className="relative min-h-screen">
+      {/* Background Image */}
+      <Image
+        src="https://i.ibb.co/DPsdpd8t/fotor-ai-20250527235547.jpg"
+        alt="Background image of blood donation"
+        layout="fill"
+        objectFit="cover"
+        className="opacity-10 z-0" // z-0 ensures it's behind the text
+      />
+      {/* Content Container */}
+      <div className="relative z-10 w-full max-w-6xl px-4 space-y-8 mx-auto py-12"> {/* mx-auto for centering, py-12 for increased padding */}
+ <div className="text-center space-y-4 py-8 bg-white bg-opacity-70 rounded-lg shadow-lg"> {/* Added padding, background, rounded corners, and shadow */}
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Active Blood Requests</h1>
+          <p className="text-muted-foreground text-lg">Find blood requests based on your criteria.</p>
+        </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg bg-card shadow">
+
         <div>
           <label htmlFor="bloodGroupFilter" className="block text-sm font-medium mb-1">Blood Group</label>
           <Select value={bloodGroupFilter} onValueChange={(value) => setBloodGroupFilter(value as BloodGroup | "all")}>
@@ -154,6 +151,7 @@ export default function ViewRequestsPage() {
           <p className="mt-2">Try adjusting your search or check back later.</p>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -42,83 +42,83 @@ export function DonorRegistrationForm({ onSubmit, defaultValues, isLoading }: Do
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Your full name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="bloodGroup"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Blood Group</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6 relative z-10">
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your blood group" />
-                    </SelectTrigger>
+                    <Input placeholder="Your full name" {...field} />
                   </FormControl>
-                  <SelectContent>
-                    {bloodGroups.map(group => (
-                      <SelectItem key={group} value={group}>{group}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Location (City/Area)</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., Dhaka, Mirpur" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="contactNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contact Number</FormLabel>
-              <FormControl>
-                <Input type="tel" placeholder="+8801XXXXXXXXX" {...field} />
-              </FormControl>
-              <FormDescription>This will be visible to those in need of blood.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <div className="grid md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="bloodGroup"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Blood Group</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your blood group" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {bloodGroups.map(group => (
+                          <SelectItem key={group} value={group}>{group}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location (City/Area)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Dhaka, Mirpur" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-        <Button type="submit" className="w-full md:w-auto" disabled={isLoading}>
-          {isLoading ? (
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
-          ) : (
-            "Register as Donor"
-          )}
-        </Button>
-      </form>
-    </Form>
-  );
+            <FormField
+              control={form.control}
+              name="contactNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Contact Number</FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="+8801XXXXXXXXX" {...field} />
+                  </FormControl>
+                  <FormDescription>This will be visible to those in need of blood.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="w-full md:w-auto" disabled={isLoading}>
+              {isLoading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
+              ) : (
+                "Register as Donor"
+              )}
+            </Button>
+          </form>
+        </Form>
+ );
 }
