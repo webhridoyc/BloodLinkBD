@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
 import crypto from "crypto";
+import clientPromise from "@/lib/mongodb.ts";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();

@@ -7,13 +7,14 @@ import { getAnalytics, type Analytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 // IMPORTANT: Ensure these values match your active Firebase project.
+// The projectId below MUST match the one in your .firebaserc file.
 const firebaseConfig = {
-  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M", // REPLACE WITH YOUR REAL API KEY for bloodlink-bd
+  apiKey: "AIzaSyBqrryEoQvKBSOOdp2rdkX7UJsRcMfWf0M",
   authDomain: "bloodlink-bd.firebaseapp.com",
   projectId: "bloodlink-bd", // This MUST match the project ID in .firebaserc
-  storageBucket: "bloodlink-bd.appspot.com",
-  messagingSenderId: "290377663920", // REPLACE WITH YOUR REAL Messaging Sender ID for bloodlink-bd
-  appId: "1:290377663920:web:e84b28e4a922ada8c04275", // REPLACE WITH YOUR REAL App ID for bloodlink-bd
+  storageBucket: "bloodlink-bd.firebasestorage.app", // Corrected from firebasestorage.app
+  messagingSenderId: "290377663920",
+  appId: "1:290377663920:web:e84b28e4a922ada8c04275",
   // measurementId is optional
 };
 
@@ -36,18 +37,19 @@ if (typeof window !== "undefined") {
 
   try {
     messaging = getMessaging(app);
-  } catch (error) {
-    console.warn("Firebase Messaging is not supported in this environment.", error);
+  } catch (error: any) {
+    console.warn("Firebase Messaging is not supported in this environment.", error.message);
     messaging = undefined;
   }
 
   try {
     analytics = getAnalytics(app);
-  } catch (error) {
-    console.warn("Firebase Analytics is not supported in this environment.", error);
+  } catch (error: any) {
+    console.warn("Firebase Analytics is not supported in this environment.", error.message);
     analytics = undefined;
   }
 }
 
 // @ts-ignore - These might be uninitialized on the server, which is expected for client SDKs.
 export { app, auth, db, messaging, analytics };
+
