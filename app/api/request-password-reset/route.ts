@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import clientPromise from "@/lib/mongodb.ts";
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
@@ -11,11 +10,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const client = await clientPromise;
-    const db = client.db(); // Replace with your database name if different
-    const usersCollection = db.collection("users"); // Replace with your users collection name if different
+    // This endpoint is intended to handle password reset requests, but currently
+    // it only contains placeholder logic after removing the MongoDB interaction.
+    // You will need to add your database interaction logic here to find the user,
+    // generate and save a reset token, and send the password reset email.
 
-    const user = await usersCollection.findOne({ email: email });
 
     // For security, we return a success message even if the user doesn't exist
     // This prevents exposing whether an email is registered or not.
@@ -25,24 +24,10 @@ export async function POST(req: NextRequest) {
       // In a real application, you might still send a generic "if an account exists..." email
       return NextResponse.json({ message: "If an account with that email exists, we sent a password reset link." }, { status: 200 });
     }
-
-    // Generate a secure reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
-
-    // Update user document with reset token and expiry
-    await usersCollection.updateOne(
-      { _id: user._id },
-      { $set: { resetToken: resetToken, resetTokenExpiry: resetTokenExpiry } }
-    );
-
-    // Construct the password reset link
-    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
-
     // TODO: Implement email sending logic here
-    console.log(`Sending password reset email to ${email} with link: ${resetLink}`);
     // Example placeholder for sending email (replace with your actual email sending code)
     // await sendPasswordResetEmail(email, resetLink);
+    console.log(`Password reset request received for ${email}. Placeholder logic executed.`);
 
     return NextResponse.json({ message: "If an account with that email exists, we sent a password reset link." }, { status: 200 });
 

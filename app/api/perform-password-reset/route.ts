@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
-import bcrypt from "bcryptjs"; // Using bcryptjs
+// import clientPromise from "../../src/lib/mongodb.ts"; // Assuming you are removing MongoDB
+import bcrypt from "bcryptjs"; // Using bcryptjs // Assuming you keep bcryptjs
 import { ObjectId } from "mongodb";
 
 export async function POST(req: NextRequest) {
@@ -11,32 +11,33 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db();
-    const usersCollection = db.collection("users");
+    // Assuming you will replace MongoDB operations with another method
+    // For demonstration, let's simulate finding a user
+    // In a real scenario, you would replace this with your new data access logic
+    const simulatedUser = {
+        _id: new ObjectId(), // Simulate user ID
+        email: email,
+        resetToken: resetToken,
+        resetTokenExpiry: new Date(Date.now() + 3600000), // Simulate a future expiry
+        // ... other user properties
+    };
 
     // Find the user with the matching email and reset token that is not expired
-    const user = await usersCollection.findOne({
-      email,
-      resetToken,
-      resetTokenExpiry: { $gt: new Date() },
-    });
+    // Replace this with your actual logic to find the user
+    const user = (simulatedUser.email === email && simulatedUser.resetToken === resetToken && simulatedUser.resetTokenExpiry > new Date()) ? simulatedUser : null;
 
     if (!user) {
       return NextResponse.json({ message: "Invalid or expired reset token" }, { status: 400 });
     }
 
     // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10); // Assuming you still need bcrypt
 
     // Update the user's password and remove the reset token fields
-    await usersCollection.updateOne(
-      { _id: user._id },
-      {
-        $set: { passwordHash: hashedPassword },
-        $unset: { resetToken: "", resetTokenExpiry: "" },
-      }
-    );
+    // Replace this with your actual logic to update the user
+    console.log(`Simulating password update for user ${user._id} with new hashed password`);
+    // Example of what your update logic might look like (replace with your new database operation)
+    // await yourNewDatabaseService.updateUserPassword(user._id, hashedPassword);
 
     return NextResponse.json({ message: "Password reset successfully" });
 
