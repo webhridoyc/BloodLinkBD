@@ -40,7 +40,7 @@ export default function RootLayout({
       <body
         suppressHydrationWarning={true}
         className={cn(
-          "min-h-screen bg-background font-sans antialiased flex flex-col",
+          "min-h-screen bg-background font-sans antialiased flex flex-col overflow-x-hidden",
           geistSans.variable,
           geistMono.variable,
           signatureFont.variable
