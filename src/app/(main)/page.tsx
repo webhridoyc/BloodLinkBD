@@ -2,6 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import Image from 'next/image';
+import Link from 'next/link';
 import {
   ArrowDownToLine,
   ArrowRight,
@@ -141,16 +143,21 @@ export default function HomePage() {
                 inspire and convert.
               </p>
               <div className="mt-6 flex flex-wrap gap-4">
-                <Button className="bg-[#f5c400] text-black hover:bg-[#f5c400]/90" size="lg">
-                  View Portfolio
-                  <ArrowRight className="h-4 w-4" />
+                <Button className="bg-[#f5c400] text-black hover:bg-[#f5c400]/90" size="lg" asChild>
+                  <Link href="#portfolio">
+                    View Portfolio
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </Button>
                 <Button
                   variant="ghost"
                   size="lg"
                   className="border border-white/15 text-white/80 hover:bg-white/10 hover:text-white"
+                  asChild
                 >
-                  <Play className="h-4 w-4" /> Play Showreel
+                  <Link href="#portfolio">
+                    <Play className="h-4 w-4" /> Play Showreel
+                  </Link>
                 </Button>
               </div>
               <div className="mt-6 flex items-center gap-2 text-sm text-white/60">
@@ -173,9 +180,12 @@ export default function HomePage() {
 
               <div className="relative">
                 <div className="absolute -bottom-8 left-6 h-28 w-44 rounded-[32px] bg-[#f5c400] opacity-90 rotate-6" />
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=80"
                   alt="Portrait of Hridoy"
+                  width={420}
+                  height={520}
+                  sizes="(min-width: 1024px) 420px, (min-width: 640px) 340px, 280px"
                   className="relative z-10 w-[280px] rounded-[28px] object-cover grayscale sm:w-[340px] lg:w-[420px]"
                 />
                 <div className="absolute -bottom-6 right-0 translate-x-6 rounded-2xl border border-white/10 bg-[#1a1a1a] px-5 py-4 text-white/80 shadow-xl">
@@ -252,8 +262,10 @@ export default function HomePage() {
               </span>
               <h2 className="mt-3 text-3xl font-bold text-[#111111]">Featured Projects</h2>
             </div>
-            <Button className="border border-gray-200 bg-white text-[#111111] hover:bg-gray-100" size="lg">
-              View All Projects <ArrowRight className="h-4 w-4" />
+            <Button className="border border-gray-200 bg-white text-[#111111] hover:bg-gray-100" size="lg" asChild>
+              <Link href="#portfolio">
+                View All Projects <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
 
@@ -263,9 +275,12 @@ export default function HomePage() {
                 key={project.title}
                 className="group relative overflow-hidden rounded-2xl bg-black/5 shadow-[0_12px_32px_rgba(15,23,42,0.12)]"
               >
-                <img
+                <Image
                   src={project.image}
                   alt={project.title}
+                  width={480}
+                  height={320}
+                  sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
                   className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -304,8 +319,10 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <Button className="mt-6 bg-[#111111] text-white hover:bg-[#1f1f1f]">
-                Download CV <ArrowDownToLine className="h-4 w-4" />
+              <Button className="mt-6 bg-[#111111] text-white hover:bg-[#1f1f1f]" asChild>
+                <a href="/hridoy-chondro-cv.pdf" download>
+                  Download CV <ArrowDownToLine className="h-4 w-4" />
+                </a>
               </Button>
             </div>
 
@@ -358,7 +375,12 @@ export default function HomePage() {
               </div>
             </div>
 
-            <form className="rounded-3xl border border-white/10 bg-[#141414] p-6 shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
+            <form
+              action="mailto:hello@hridoychondro.com"
+              method="post"
+              encType="text/plain"
+              className="rounded-3xl border border-white/10 bg-[#141414] p-6 shadow-[0_18px_40px_rgba(0,0,0,0.25)]"
+            >
               <div className="grid gap-4 sm:grid-cols-2">
                 <Input
                   placeholder="Your Name"
