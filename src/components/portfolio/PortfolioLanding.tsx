@@ -155,7 +155,7 @@ export default function PortfolioLanding() {
                   className="border border-white/15 text-white/80 hover:bg-white/10 hover:text-white"
                   asChild
                 >
-                  <a href="https://www.youtube.com" target="_blank" rel="noreferrer">
+                  <a href="https://www.youtube.com/watch?v=ysz5S6PUM-U" target="_blank" rel="noreferrer">
                     <Play className="h-4 w-4" /> Play Showreel
                   </a>
                 </Button>

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu as MenuIcon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Menu as MenuIcon, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
@@ -17,6 +17,17 @@ const portfolioLinks = [
 
 export default function PortfolioHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
+  const handleThemeToggle = () => {
+    const nextValue = !isDark;
+    setIsDark(nextValue);
+    document.documentElement.classList.toggle('dark', nextValue);
+  };
 
   return (
     <header className="bg-foreground/95 border-b border-white/10 sticky top-0 z-50 backdrop-blur">
@@ -41,8 +52,9 @@ export default function PortfolioHeader() {
             type="button"
             className="hidden sm:flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 hover:text-[#f5c400] transition-colors"
             aria-label="Toggle theme"
+            onClick={handleThemeToggle}
           >
-            <Sun className="h-5 w-5" />
+            {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
           <div className="lg:hidden">
