@@ -179,7 +179,7 @@ export default function PortfolioLanding() {
               />
 
               <div className="relative">
-                <div className="absolute -bottom-8 left-6 h-28 w-44 rounded-[32px] bg-[#f5c400] opacity-90 rotate-6" />
+                <div className="absolute -bottom-8 left-6 h-28 w-44 rounded-[32px] bg-[#f5c400] opacity-90 -rotate-6" />
                 <Image
                   src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=80"
                   alt="Portrait of Hridoy"

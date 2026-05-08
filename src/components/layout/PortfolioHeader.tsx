@@ -19,7 +19,7 @@ export default function PortfolioHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-[#0b0b0b]/95 border-b border-white/10 sticky top-0 z-50 backdrop-blur">
+    <header className="bg-foreground/95 border-b border-white/10 sticky top-0 z-50 backdrop-blur">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between text-white">
         <Link href="#home" className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f5c400] text-base font-bold text-black">
@@ -55,14 +55,15 @@ export default function PortfolioHeader() {
               </SheetTrigger>
               <SheetContent side="right" className="w-full max-w-xs p-6 bg-[#0b0b0b] text-white">
                 <SheetHeader className="mb-6 pb-4 border-b border-white/10">
-                  <SheetTitle>
+                  <SheetTitle className="text-left text-base text-white/70">Navigation</SheetTitle>
+                  <div className="mt-3">
                     <Link href="#home" className="flex items-center gap-3" onClick={() => setMobileMenuOpen(false)}>
                       <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f5c400] text-base font-bold text-black">
                         HC
                       </span>
                       <span className="text-base font-semibold tracking-wide">Hridoy Chondro</span>
                     </Link>
-                  </SheetTitle>
+                  </div>
                 </SheetHeader>
                 <nav className="flex flex-col space-y-2">
                   {portfolioLinks.map((link) => (
