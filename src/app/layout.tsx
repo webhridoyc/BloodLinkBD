@@ -1,6 +1,6 @@
 
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Yellowtail } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 import Header from '@/components/layout/Header';
@@ -18,9 +18,15 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const signatureFont = Yellowtail({
+  variable: '--font-signature',
+  subsets: ['latin'],
+  weight: '400',
+});
+
 export const metadata: Metadata = {
-  title: 'BloodLink BD - Connect Donors, Save Lives',
-  description: 'A platform to connect blood donors with those in need in Bangladesh.',
+  title: 'Hridoy Chondro | Portfolio',
+  description: 'Portfolio of Hridoy Chondro, Graphic Designer & Digital Marketer.',
   // manifest: '/manifest.json', // Add if you have a manifest.json for PWA features
 };
 
@@ -36,7 +42,8 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased flex flex-col",
           geistSans.variable,
-          geistMono.variable
+          geistMono.variable,
+          signatureFont.variable
         )}
       >
         <Providers>

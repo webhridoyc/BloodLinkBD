@@ -7,89 +7,91 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
   :root {
-    --background: 20 71% 91%; /* Light Peach */
-    --foreground: 240 10% 3.9%; /* Dark Gray for readability */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 8%;
     
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
 
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 0 82% 75.3%; /* Soft Coral */
-    --primary-foreground: 240 10% 3.9%; /* Dark text on Soft Coral */
+    --primary: 45 100% 51%;
+    --primary-foreground: 0 0% 8%;
 
-    --secondary: 340 51% 88%; /* Lighter Pale Rose for secondary elements */
-    --secondary-foreground: 240 10% 3.9%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 18%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 340 51% 64.1%; /* Pale Rose */
-    --accent-foreground: 0 0% 98%; /* Light text on Pale Rose */
+    --accent: 45 100% 51%;
+    --accent-foreground: 0 0% 8%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 98%; /* Lighter input background */
-    --ring: 0 82% 75.3%; /* Soft Coral for ring */
+    --border: 0 0% 90%;
+    --input: 0 0% 96%;
+    --ring: 45 100% 51%;
 
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Sidebar specific colors - can be adjusted further if needed */
-    --sidebar-background: 20 70% 95%; /* Lighter peach or very light gray */
-    --sidebar-foreground: 240 10% 3.9%;
-    --sidebar-primary: 0 82% 70%; /* Slightly darker/more saturated Coral for sidebar primary */
-    --sidebar-primary-foreground: 0 0% 3.9%;
-    --sidebar-accent: 340 51% 80%; /* Lighter Pale Rose for sidebar accent */
-    --sidebar-accent-foreground: 240 10% 3.9%;
-    --sidebar-border: 20 50% 85%;
-    --sidebar-ring: 0 82% 75.3%;
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 45 100% 51%;
+    --sidebar-primary-foreground: 0 0% 8%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 45 100% 51%;
   }
 
   .dark {
-    /* TODO: Define a dark theme if needed, for now, focusing on the light theme from prompt */
-    --background: 240 10% 3.9%;
+    --background: 0 0% 6%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 82% 75.3%; /* Soft Coral */
-    --primary-foreground: 240 10% 3.9%; /* Dark text on Soft Coral */
-    --secondary: 340 51% 20%; /* Darker Pale Rose for secondary */
+    --primary: 45 100% 51%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 18%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 340 51% 64.1%; /* Pale Rose */
-    --accent-foreground: 0 0% 98%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 45 100% 51%;
+    --accent-foreground: 0 0% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 82% 75.3%;
+    --border: 0 0% 16%;
+    --input: 0 0% 14%;
+    --ring: 45 100% 51%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
     
-    --sidebar-background: 240 10% 5.9%;
+    --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 82% 70%;
-    --sidebar-primary-foreground: 240 10% 3.9%;
-    --sidebar-accent: 340 51% 50%;
+    --sidebar-primary: 45 100% 51%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 18%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 10% 10%;
-    --sidebar-ring: 0 82% 75.3%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 45 100% 51%;
   }
 }
 

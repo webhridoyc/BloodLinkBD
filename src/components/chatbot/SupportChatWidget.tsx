@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -27,11 +28,16 @@ interface Message {
 }
 
 export function SupportChatWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  if (pathname === '/') {
+    return null;
+  }
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
